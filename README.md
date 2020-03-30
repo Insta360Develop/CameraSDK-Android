@@ -1,11 +1,26 @@
 # 目录
 - [Camera SDK功能](#CameraSDK功能)
-  - [初始化](#初始化)
-  - [连接/断开/监听相机](#连接/断开/监听相机)
+  - [初始化](#CameraSDK初始化)
+  - [连接/断开/监听相机](#CameraSDK连接/断开/监听相机)
+  - [获取相机状态属性](#CameraSDK获取相机状态属性)
+  - [获取相机其他信息](#CameraSDK获取相机其他信息)
+  - [预览](#CameraSDK预览)
+  - [拍摄](#CameraSDK拍摄)
+  - [属性设置](#CameraSDK属性设置)
+  - [其他功能](#CameraSDK其他功能)
+  - [OSC](#CameraSDKOSC)
+- [Media SDK功能](#MediaSDK功能)
+  - [初始化](#MediaSDK初始化)
+  - [预览](#MediaSDK预览)
+  - [WorkWrapper](#MediaSDKWorkWrapper)
+  - [获取媒体文件列表](#MediaSDK获取媒体文件列表)
+  - [播放](#MediaSDK播放)
+  - [导出](#MediaSDK导出)
+  - [HDR拼接](#MediaSDKHDR拼接)
   
 # <a name="CameraSDK功能" />Camera SDK功能
 
-## <a name="初始化" />初始化
+## <a name="CameraSDK初始化" />初始化
 
 ```
 // IOscRequestDelegate：如果项目中使用SDK提供的OSC管理类，需创建一个Delegate实例，否则可传null
@@ -14,7 +29,7 @@ InstaCameraSDK.init(Application, @Nullable IOscRequestDelegate);
 
 
 
-## <a name="连接/断开/监听相机" />连接/断开/监听相机
+## <a name="CameraSDK连接/断开/监听相机" />连接/断开/监听相机
 
 ### 连接相机
 
@@ -71,7 +86,7 @@ onCameraBatteryUpdate(int batteryLevel, boolean isCharging);
 
 
 
-## 获取相机状态属性
+## <a name="CameraSDK获取相机状态属性" />获取相机状态属性
 
 当前相机是否已连接
 
@@ -93,7 +108,7 @@ InstaCameraManager.getInstance().isCameraConnectedByUsb();
 
 
 
-## 获取相机其他信息
+## <a name="CameraSDK获取相机其他信息" />获取相机其他信息
 
 > 下列方法只被作为参数供其他接口调用，开发者无需重点关注，后边会在需要调用处进行相应说明。
 
@@ -125,7 +140,7 @@ InstaCameraManager.getInstance().getCameraInfoMap();
 
 
 
-## 预览
+## <a name="CameraSDK预览" />预览
 
 ### 打开预览流
 
@@ -165,7 +180,7 @@ onError();
 
 
 
-## 拍摄
+## <a name="CameraSDK拍摄" />拍摄
 
 > 相机连接成功后即可调用拍摄接口
 
@@ -260,7 +275,7 @@ onCaptureCountChanged(int captureCount);
 
 
 
-## 属性设置
+## <a name="CameraSDK属性设置" />属性设置
 
 ### EV值
 
@@ -299,7 +314,7 @@ InstaCameraManager.getInstance().isCameraBeep();
 
 
 
-## 其他功能
+## <a name="CameraSDK其他功能" />其他功能
 
 ### 陀螺仪矫正
 
@@ -336,7 +351,7 @@ ICameraOperateCallback
 
 
 
-## OSC
+## <a name="CameraSDKOSC" />OSC
 
 IOscRequestDelegate
 
@@ -435,9 +450,9 @@ onError(String message);
 
 
 
-# Media SDK功能
+# <a name="MediaSDK功能" />Media SDK功能
 
-## 初始化
+## <a name="MediaSDK初始化" />初始化
 
 ```
 InstaMediaSDK.init(Application);
@@ -445,7 +460,7 @@ InstaMediaSDK.init(Application);
 
 
 
-## 预览
+## <a name="MediaSDK预览" />预览
 
 InstaCapturePlayerView
 
@@ -549,7 +564,7 @@ public void onOpened() {
 
 
 
-## WorkWrapper
+## <a name="MediaSDKWorkWrapper" />WorkWrapper
 
 播放、导出等接口需要传递的数据模型
 
@@ -568,7 +583,7 @@ String getIdenticalKey()
 
 
 
-## 获取媒体文件列表
+## <a name="MediaSDK获取媒体文件列表" />获取媒体文件列表
 
 ### 从相机获取
 
@@ -590,7 +605,7 @@ List<WorkWrapper> getAllLocalWorks(String dirPath);
 
 
 
-## 播放
+## <a name="MediaSDK播放" />播放
 
 ### 图片
 
@@ -743,7 +758,7 @@ setCacheCutSceneRootPath(String path);
 
 
 
-## 导出
+## <a name="MediaSDK导出" />导出
 
 ExportImageParamsBuilder
 
@@ -882,7 +897,7 @@ ExportUtils.stopExport(int exportId);
 
 
 
-## HDR拼接
+## <a name="MediaSDKHDR拼接" />HDR拼接
 
 ```
 boolean StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
