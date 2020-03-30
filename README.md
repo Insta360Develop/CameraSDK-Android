@@ -1,9 +1,9 @@
 # 目录
-- [Camera SDK功能](#Camera SDK功能)
+- [Camera SDK功能](#CameraSDK功能)
   - [初始化](#初始化)
   - [连接/断开/监听相机](#连接/断开/监听相机)
   
-# <a name="Camera SDK功能" />Camera SDK功能
+# <a name="CameraSDK功能" />Camera SDK功能
 
 ## <a name="初始化" />初始化
 
