@@ -1,8 +1,11 @@
-[TOC]
+# 目录
+- [Camera SDK功能](#Camera SDK功能)
+  - [初始化](#初始化)
+  - [连接/断开/监听相机](#连接/断开/监听相机)
+  
+# <a name="Camera SDK功能" />Camera SDK功能
 
-# Camera SDK功能
-
-## 初始化
+## <a name="初始化" />初始化
 
 ```
 // IOscRequestDelegate：如果项目中使用SDK提供的OSC管理类，需创建一个Delegate实例，否则可传null
@@ -11,7 +14,7 @@ InstaCameraSDK.init(Application, @Nullable IOscRequestDelegate);
 
 
 
-## 连接/断开/监听相机
+## <a name="连接/断开/监听相机" />连接/断开/监听相机
 
 ### 连接相机
 
@@ -582,7 +585,7 @@ List<WorkWrapper> WorkUtils.getAllCameraWorks(
 
 ```
 // dirPath：本地目录路径
-List<WorkWrapper> getAllLocalWorks(String dirPath)
+List<WorkWrapper> getAllLocalWorks(String dirPath);
 ```
 
 
