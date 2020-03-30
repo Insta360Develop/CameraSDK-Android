@@ -16,7 +16,7 @@
   - [获取媒体文件列表](#MediaSDK获取媒体文件列表)
   - [播放](#MediaSDK播放)
   - [导出](#MediaSDK导出)
-  - [HDR拼接](#MediaSDKHDR拼接)
+  - [生成HDR图像](#MediaSDK生成HDR图像)
   
 # <a name="CameraSDK功能" />Camera SDK功能
 
@@ -369,11 +369,11 @@ ICameraOperateCallback
 
 > 详情见`陀螺仪矫正`
 
-------
-
 
 
 ## <a name="CameraSDKOSC" />OSC
+
+> OSC协议官方文档：[Open Spherical Camera API](https://developers.google.cn/streetview/open-spherical-camera/guides/osc)
 
 IOscRequestDelegate
 
@@ -477,6 +477,8 @@ onSuccessful(Object object);
 // 请求失败
 onError(String message);
 ```
+
+------
 
 
 
@@ -1007,7 +1009,7 @@ ExportUtils.stopExport(int exportId);
 
 
 
-## <a name="MediaSDKHDR拼接" />HDR拼接
+## <a name="MediaSDK生成HDR图像" />生成HDR图像
 
 ```
 boolean StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
