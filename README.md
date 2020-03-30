@@ -1,54 +1,60 @@
-# 目录
-- [Camera SDK功能](#CameraSDK功能)
-  - [初始化](#CameraSDK初始化)
-  - [连接/断开/监听相机](#CameraSDK连接/断开/监听相机)
-  - [获取相机状态属性](#CameraSDK获取相机状态属性)
-  - [获取相机其他信息](#CameraSDK获取相机其他信息)
-  - [预览](#CameraSDK预览)
-  - [拍摄](#CameraSDK拍摄)
-  - [属性设置](#CameraSDK属性设置)
-  - [其他功能](#CameraSDK其他功能)
-  - [OSC](#CameraSDKOSC)
-- [Media SDK功能](#MediaSDK功能)
-  - [初始化](#MediaSDK初始化)
-  - [预览](#MediaSDK预览)
-  - [WorkWrapper](#MediaSDKWorkWrapper)
-  - [获取媒体文件列表](#MediaSDK获取媒体文件列表)
-  - [播放](#MediaSDK播放)
-  - [导出](#MediaSDK导出)
-  - [生成HDR图像](#MediaSDK生成HDR图像)
-  
-# <a name="CameraSDK功能" />Camera SDK功能
+中文版本请参看[这里](./readme_cn.md)
 
-## <a name="CameraSDK初始化" />初始化
+------
+
+
+
+# Table of Contents
+- [Camera SDK Function](#CameraSDK功能)
+  - [Initialization](#CameraSDK初始化)
+  - [Connect / Disconnect / Monitor Camera](#CameraSDK连接/断开/监听相机)
+  - [Get Camera Status Properties](#CameraSDK获取相机状态属性)
+  - [Get other camera information](#CameraSDK获取相机其他信息)
+  - [Preview](#CameraSDK预览)
+  - [Capture](#CameraSDK拍摄)
+  - [Settings](#CameraSDK属性设置)
+  - [Others](#CameraSDK其他功能)
+  - [OSC](#CameraSDKOSC)
+- [Media SDK Function](#MediaSDK功能)
+  - [Initialization](#MediaSDK初始化)
+  - [Preview](#MediaSDK预览)
+  - [WorkWrapper](#MediaSDKWorkWrapper)
+  - [Get Media File List](#MediaSDK获取媒体文件列表)
+  - [Player](#MediaSDK播放)
+  - [Export](#MediaSDK导出)
+  - [Generate HDR Image](#MediaSDK生成HDR图像)
+  
+# <a name="CameraSDK功能" />Camera SDK Function
+
+## <a name="CameraSDK初始化" />Initialization
 
 ```
-// IOscRequestDelegate：如果项目中使用SDK提供的OSC管理类，需创建一个Delegate实例，否则可传null
+// IOscRequestDelegate：If your project uses `OSCManager` provided by the SDK, you need to create a Delegate instance, otherwise you can pass null
 InstaCameraSDK.init(Application, @Nullable IOscRequestDelegate);
 ```
 
 
 
-## <a name="CameraSDK连接/断开/监听相机" />连接/断开/监听相机
+## <a name="CameraSDK连接/断开/监听相机" />Connect / Disconnect / Listener Camera
 
-### 连接相机
+### Connect
 
 ```
-// 通过USB连接相机
+// Connect by USB
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.USB);
-// 通过WIFI连接相机
+// Connect by WIFI
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.WIFI);
 ```
 
-### 断开相机
+### Close
 
 ```
 InstaCameraManager.getInstance().closeCamera();
 ```
 
-### 相机状态监听器
+### Listener
 
-可在多个页面`注册/反注册`监听
+You can `register / unregister` listen on multiple pages
 
 ```
 InstaCameraManager.getInstance().registerCameraChangedCallback(ICameraChangedCallback);
@@ -58,49 +64,49 @@ InstaCameraManager.getInstance().unregisterCameraChangedCallback(ICameraChangedC
 ICameraChangedCallback
 
 ```
-// 相机状态发生改变
-// enabled：当前相机是否可用
+// Camera status changed
+// enabled: Whether the camera is available
 onCameraStatusChanged(boolean enabled);
 
-// 相机连接失败
-// 常见的情况是已经有其他手机或者本手机的其他应用跟这台相机建立了连接，导致此次建立失败，需要其他手机先断开与此相机的连接
+// Camera connection failed
+// A common situation is that other phones or other applications of this phone have already established a connection with this camera, resulting in this establishment failure, and other phones need to disconnect from this camera first.
 onCameraConnectError();
 
-// SD卡插拔通知
-// enabled：当前SD卡是否可用
+// SD card insertion notification
+// enabled: Whether the current SD card is available
 onCameraSDCardStateChanged(boolean enabled);
 
-// SD卡存储状态发生改变
-// freeSpace：当前可用大小
-// totalSpace：总大小
+// SD card storage status changed
+// freeSpace: Currently available size
+// totalSpace: Total size
 onCameraStorageChanged(long freeSpace, long totalSpace);
 
-// 相机电量低通知
+// Low battery notification
 void onCameraBatteryLow();
 
-// 相机电量发生改变通知
-// batteryLevel：当前电量（0-100，充电时会始终返回100）
-// isCharging：是否正在充电中
+// Camera power change notification
+// batteryLevel: Current power (0-100, always returns 100 when charging)
+// isCharging: Whether the camera is charging
 onCameraBatteryUpdate(int batteryLevel, boolean isCharging);
 ```
 
 
 
-## <a name="CameraSDK获取相机状态属性" />获取相机状态属性
+## <a name="CameraSDK获取相机状态属性" />Get Camera Status Properties
 
-当前相机是否已连接
+Whether the camera is connected
 
 ```
 InstaCameraManager.getInstance().isCameraConnected();
 ```
 
-当前是否为WIFI连接
+Whether the camera is connected by WIFI
 
 ```
 InstaCameraManager.getInstance().isCameraConnectedByWifi();
 ```
 
-当前是否为USB连接
+Whether the camera is connected by USB
 
 ```
 InstaCameraManager.getInstance().isCameraConnectedByUsb();
@@ -108,29 +114,29 @@ InstaCameraManager.getInstance().isCameraConnectedByUsb();
 
 
 
-## <a name="CameraSDK获取相机其他信息" />获取相机其他信息
+## <a name="CameraSDK获取相机其他信息" />Get other camera information
 
-> 下列方法只被作为参数供其他接口调用，开发者无需重点关注，后边会在需要调用处进行相应说明。
+> The following methods are only used as parameters for other interfaces to call. Developers don't need to pay much attention to them, and they will be explained later at the places where they need to be called.
 
-获取相机型号名
+Camera Type
 
 ```
 InstaCameraManager.getInstance().getCameraType();
 ```
 
-获取相机文件尾
+Camera Media Offset
 
 ```
 InstaCameraManager.getInstance().getMediaOffset();
 ```
 
-获取相机Host地址
+Camera Host
 
 ```
 InstaCameraManager.getInstance().getCameraHttpPrefix();
 ```
 
-获取相机文件信息列表
+Camera File List
 
 ```
 InstaCameraManager.getInstance().getAllUrlList();
@@ -140,25 +146,25 @@ InstaCameraManager.getInstance().getCameraInfoMap();
 
 
 
-## <a name="CameraSDK预览" />预览
+## <a name="CameraSDK预览" />Preview
 
-### 打开预览流
+### Open Preview Stream
 
-相机连接成功后即可打开预览流
+You can open the preview stream after the camera is successfully connected
 
 ```
 InstaCameraManager.getInstance().startPreviewStream();
 ```
 
-### 关闭预览流
+### Close Preview Stream
 
-退出预览页面时需关闭预览，如果相机被动断开了连接或者在预览过程中直接调用了`closeCamera`，SDK会自动关闭预览流处理相关状态，不需要额外调用`closePreviewStream`
+You need to close the preview when exiting the preview page. If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call` closePreviewStream`.
 
 ```
 InstaCameraManager.getInstance().closePreviewStream();
 ```
 
-### 监听预览状态
+### Listener Status Changed
 
 ```
 InstaCameraManager.getInstance().setPreviewStatusChangedListener(IPreviewStatusListener);
@@ -167,104 +173,104 @@ InstaCameraManager.getInstance().setPreviewStatusChangedListener(IPreviewStatusL
 IPreviewStatusListener
 
 ```
-// 正在开启预览
+// Opening preview
 onOpening();
 
-// 预览流已开启，可播放显示
-// 播放操作见[MediaSDK功能 - 预览]
+// Preview stream is on and can be played
+// See[Media SDK Function - Preview]
 onOpened();
 
-// 预览已停止
+// Preview stopped
 onIdle();
 
-// 预览开启失败
+// Preview failed to open
 onError();
 ```
 
 
 
-## <a name="CameraSDK拍摄" />拍摄
+## <a name="CameraSDK拍摄" />Capture
 
-> 相机连接成功后即可调用拍摄接口
+> You can call the Capture Interface after the camera is successfully connected
 
-### 拍摄模式
+### Capture Mode
 
-普通拍照
+Normal Capture
 
 ```
-// isRaw：如果为true则拍摄RAW格式原图
+// isRaw: If true then capture the original image in RAW format
 InstaCameraManager.getInstance().startNormalCapture(boolean isRaw);
 
-// 判断状态
+// Whether the camera is Normal Capturing
 InstaCameraManager.getInstance().isNormalCapturing();
 ```
 
-HDR拍照
+HDR Capture
 
 ```
-// isRaw：如果为true则拍摄RAW格式原图
+// isRaw：If true then capture the original image in RAW format
 InstaCameraManager.getInstance().startHDRCapture(false);
 
-// 判断状态
+// Whether the camera is HDR Capturing
 InstaCameraManager.getInstance().isHDRCapturing();
 ```
 
-间隔拍照
+Interval Capture
 
 ```
-// 开始
+// Start
 InstaCameraManager.getInstance().startIntervalShooting();
 
-// 停止
+// Stop
 InstaCameraManager.getInstance().stopIntervalShooting();
 
-// 判断状态
+// Whether the camera is Interval Capturing
 InstaCameraManager.getInstance().isIntervalShooting();
 
-// 设置间隔时间，单位ms
+// Set Interval Time，in ms
 InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
 ```
 
-普通录像
+Normal Record
 
 ```
-// 开始
+// Start
 InstaCameraManager.getInstance().startNormalRecord();
 
-// 停止
+// Stop
 InstaCameraManager.getInstance().stopNormalRecord();
 
-// 判断状态
+// Whether the camera is Normal Recording
 InstaCameraManager.getInstance().isNormalRecording();
 ```
 
-HDR录像
+HDR Record
 
 ```
-// 开始
+// Start
 InstaCameraManager.getInstance().startHDRRecord();
 
-// 停止
+// Stop
 InstaCameraManager.getInstance().stopHDRRecord();
 
-// 判断状态
+// Whether the camera is HDR Recording
 InstaCameraManager.getInstance().isHDRRecording();
 ```
 
-延时摄影
+TimeLapse
 
 ```
-// 开始
+// Start
 InstaCameraManager.getInstance().startTimeLapse();
 
-// 停止
+// Stop
 InstaCameraManager.getInstance().stopTimeLapse();
 
-// 判断状态
+// Whether the camera is TimeLapsing
 InstaCameraManager.getInstance().isTimeLapsing();
 ```
 
-### 监听拍摄状态
+### Listener Status Changed
 
 ```
 InstaCameraManager.getInstance().setCaptureStatusListener(ICaptureStatusListener);
@@ -273,74 +279,74 @@ InstaCameraManager.getInstance().setCaptureStatusListener(ICaptureStatusListener
 ICaptureStatusListener
 
 ```
-// 开始拍摄
+// Capture Starting
 onCaptureStarting();
 
-// 拍摄中...
+// Capture Working...
 onCaptureWorking();
 
-// 拍摄停止中...
+// Capture Stopping...
 onCaptureStopping();
 
-// 拍摄结束
+// Capture Finished
 onCaptureFinish();
 
-// 录像时长，单位ms
+// Record Duration，in ms
 onCaptureTimeChanged(long captureTime);
 
-// 间隔拍摄张数
+// Interval shots
 onCaptureCountChanged(int captureCount);
 ```
 
 
 
-## <a name="CameraSDK属性设置" />属性设置
+## <a name="CameraSDK属性设置" />Settings
 
-### EV值
+### EV Value
 
 ```;
-// 设置某模式EV值
-// funcMode：设置EV值时要先选择拍摄模式 @InstaCameraManager.FunctionMode
-// ev：范围 -4 ~ 4
+// Set the EV value of a mode
+// funcMode: Select the Capture Mode when setting the EV value @InstaCameraManager.FunctionMode
+// ev: Range -4 ~ 4
 InstaCameraManager.getInstance().setExposureEV(int funcMode, float ev);
 
-// 获取某模式EV值
+// Get the EV value of a mode
 InstaCameraManager.getInstance().getExposureEV(int funcMode);
 ```
 
-所支持的设置模式：InstaCameraManager.FunctionMode
+Supported setting modes: InstaCameraManager.FunctionMode
 
 ```
-FUNCTION_MODE_CAPTURE_NORMAL：普通拍照
-FUNCTION_MODE_HDR_CAPTURE：HDR拍照
-FUNCTION_MODE_INTERVAL_SHOOTING：间隔拍照
-FUNCTION_MODE_RECORD_NORMAL：普通录像
-FUNCTION_MODE_HDR_RECORD：HDR录像
-FUNCTION_MODE_BULLETTIME：子弹时间
-FUNCTION_MODE_TIMELAPSE：延时摄影
+FUNCTION_MODE_CAPTURE_NORMAL：Normal Capture
+FUNCTION_MODE_HDR_CAPTURE：HDR Capture
+FUNCTION_MODE_INTERVAL_SHOOTING：Interval Capture
+FUNCTION_MODE_RECORD_NORMAL：Normal Record
+FUNCTION_MODE_HDR_RECORD：HDR Record
+FUNCTION_MODE_BULLETTIME：BulletTime
+FUNCTION_MODE_TIMELAPSE：TimeLapse
 ```
 
-### 相机提示音
+### Camera Beep
 
-> 设置相机拍摄时是否有提示音
+> Set whether there is a beep sound when the camera shoots
 
 ```
-// 设置
+// Set Beep Enabled
 InstaCameraManager.getInstance().setCameraBeepSwitch(boolean beep);
 
-// 判断
+// Whether beep is enabled
 InstaCameraManager.getInstance().isCameraBeep();
 ```
 
 
 
-## <a name="CameraSDK其他功能" />其他功能
+## <a name="CameraSDK其他功能" />Others
 
-### 陀螺仪矫正
+### Calibrate Gyro
 
-> 必须在WIFI连接相机时才能使用此功能
+> This function must be used when the camera is connected to WIFI
 >
-> 矫正前请将相机竖直立在平稳的水平面上
+> Before correction, please stand the camera upright on a stable and level surface.
 
 ```
 InstaCameraManager.getInstance().calibrateGyro(ICameraOperateCallback);
@@ -349,17 +355,17 @@ InstaCameraManager.getInstance().calibrateGyro(ICameraOperateCallback);
 ICameraOperateCallback
 
 ```
-// 操作成功
+// Operation Successful
 onSuccessful();
 
-// 操作失败
+// Operation Failed
 onFailed();
 
-// 相机连接错误导致的失败
+// Failure due to incorrect camera connection
 onCameraConnectError();
 ```
 
-### 格式化SD卡
+### Format SD card
 
 ```
 InstaCameraManager.getInstance().formatStorage(ICameraOperateCallback);
@@ -367,114 +373,114 @@ InstaCameraManager.getInstance().formatStorage(ICameraOperateCallback);
 
 ICameraOperateCallback
 
-> 详情见`陀螺仪矫正`
+> See`Calibrate Gyro`
 
 
 
 ## <a name="CameraSDKOSC" />OSC
 
-> OSC协议官方文档：[Open Spherical Camera API](https://developers.google.cn/streetview/open-spherical-camera/guides/osc)
+> OSC Official Document: [Open Spherical Camera API](https://developers.google.cn/streetview/open-spherical-camera/guides/osc)
 
 IOscRequestDelegate
 
-> 用您喜欢的网络库实现Get/Post同步请求，并将结果返回给OscManager使用
+> Use your favorite network library to implement `Get / Post` synchronization request and return the result to `OscManager` for use
 
 ```
 /**
- * 以Get的方式发送一个Http网络请求
+ * Send a Http network request by Get
  *
- * @param url       请求地址
- * @param headerMap 需要使用的HTTP请求头
- * @return 网络请求响应正文(body)或错误信息(message)
+ * @param url       Request address
+ * @param headerMap HTTP request headers to use
+ * @return Network Request Response Body or Error Message
  */
 OSCResult sentRequestByGet(String url, Map<String, String> headerMap);
 
 /**
- * 以Post的方式发送一个Http网络请求
+ * Send a Http network request by Post
  *
- * @param url       请求地址
- * @param content   osc命令内容
- * @param headerMap 需要使用的HTTP请求头
- * @return 网络请求响应正文(body)或错误信息(message)
+ * @param url       Request address
+ * @param content   osc command content
+ * @param headerMap HTTP request headers to use
+ * @return Network Request Response Body or Error Message
  */
 OSCResult sentRequestByPost(String url, String content, Map<String, String> headerMap);
 
 /**
- * 请求结果
+ * Request result
  *
- * @param isSuccessful 是否成功
- * @param result       成功为response.body().string()，失败为response.message()      
+ * @param isSuccessful 
+ * @param result       Success is response.body().string()，Failure is response.message()      
 OSCResult(boolean isSuccessful, String result)
 ```
 
 OscManager
 
 ```
-// 发送设置相机参数命令
-// OscOptions为参数详情
-// 若成功，callback返回null
+// Set Options
+// OscOptions for parameter details
+// If successful, callback returns null
 setOptions(OscOptions options, IOscCallback callback);
 
-// 发送拍照命令
-// OscOptions：先设置相机参数，之后自动拍照，如果当前CaptureMode为image则选填，否则必填
-// 若成功，callback返回拍摄文件地址（String[] urls），可下载到本地
+// Take Picture
+// OscOptions: Set the Options first, and then take a photo automatically. If the current CaptureMode is image, select it, otherwise it is required
+// If successful, callback returns file address (String[] urls), could be downloaded to local
 takePicture(OscOptions options, IOscCallback callback);
 
-// 发送开始录像命令
-// OscOptions：可先设置相机参数，之后自动开始录像，如果当前CaptureMode为video则选填，否则必填
-// 若成功，callback返回null
+// Start Record
+// OscOptions: Set the Options first, and then take a photo automatically. If the current CaptureMode is video, select it, otherwise it is required
+// If successful, callback returns null
 startRecord(OscOptions options, IOscCallback callback);
 
-// 发送停止录像命令
-// 若成功，callback返回拍摄文件地址（String[] urls），可下载到本地
+// Stop Record
+// If successful, callback returns file address (String[] urls), could be downloaded to local
 startRecord(IOscCallback callback);
 
-// 自定义OSC命令请求
-// oscApi：如/osc/info、/osc/state等
-// content：RequestBody的内容，如果为null则使用GET请求，否则使用POST请求
+// Optional OSC Request
+// oscApi：such as /osc/info, /osc/state
+// content：Content of RequestBody. If it is null, use GET request, otherwise use POST request
 customRequest(String oscApi, String content, IOscCallback callback);
 ```
 
 OscOptions
 
-> ONE X相机所支持的设置选项
+> ONE X Camera Supported Options
 
 ```
 OscOptions.Builder builder = new OscOptions.Builder();
 OscOptions oscOptions = builder.build();
 
-// 设置拍摄模式：OscOptions.CAPTURE_MODE_IMAGE/CAPTURE_MODE_VIDEO
+// set Capture Mode: OscOptions.CAPTURE_MODE_IMAGE/CAPTURE_MODE_VIDEO
 setCaptureMode(@CaptureMode String captureMode)
 
-// 设置曝光模式
+// set Exposure Mode
 setExposureProgram(@ExposureProgram int exposureProgram);
 
-// 设置ISO
+// Set ISO Value
 setISO(@ISO int iso);
 
-// 设置快门速度
+// set Shutter Speed
 setShutterSpeed(@ShutterSpeed int speed);
 
-// 设置白平衡
+// set White Balance
 setWhiteBalance(@WhiteBalance String whiteBalance);
 
-// 设置是否启动HDR拍摄
+// Set whether to enable HDR Capture
 setHDREnabled(boolean enabled);
 
-// 设置HDR拍摄参数
+// Set HDR Capture Parameters
 setExposureBracketParams(int shots, int increment);
 ```
 
 IOscCallback
 
 ```
-// 开始发送OSC命令请求
+// Start sending OSC requests
 onStartRequest();
 
-// 请求成功
+// Request Successful
 onSuccessful(Object object);
 
-// 请求失败
+// Request failed
 onError(String message);
 ```
 
@@ -482,9 +488,9 @@ onError(String message);
 
 
 
-# <a name="MediaSDK功能" />Media SDK功能
+# <a name="MediaSDK功能" />Media SDK Function
 
-## <a name="MediaSDK初始化" />初始化
+## <a name="MediaSDK初始化" />Initialization
 
 ```
 InstaMediaSDK.init(Application);
@@ -492,83 +498,83 @@ InstaMediaSDK.init(Application);
 
 
 
-## <a name="MediaSDK预览" />预览
+## <a name="MediaSDK预览" />Preview
 
 InstaCapturePlayerView
 
 ```
-// 绑定生命周期
+// Bind Lifecycle
 setLifecycle(Lifecycle);
 
-// 设置播放器状态监听
+// Set player status listener
 setPlayerViewListener(PlayerViewListener);
 
-// 设置手势操作监听
+// Set gesture listener
 setGestureListener(PlayerGestureListener);
 
-// 播放前配置参数
+// Configuration parameters before playback
 prepare(CaptureParamsBuilder);
 
-// 播放
+// Play
 play();
 
-// 释放
+// Release
 destroy();
 ```
 
 ```
-// 切换到普通模式，仅限渲染模式为RENDER_MODE_AUTO时可用
+// Switch Normal Mode. Available only when the rendering mode is `RENDER_MODE_AUTO`
 switchNormalMode();
 
-// 切换到鱼眼模式，仅限渲染模式为RENDER_MODE_AUTO时可用
+// Switch Fisheye Mode. Available only when the rendering mode is `RENDER_MODE_AUTO`
 switchFisheyeMode();
 
-// 切换到透视模式，仅限渲染模式为RENDER_MODE_AUTO时可用
+// Switch Perspective Mode. Available only when the rendering mode is `RENDER_MODE_AUTO`
 switchPerspectiveMode();
 
-// 判断播放器是否正在加载中
+// Whether the player is loading
 boolean isLoading();
 
-// CameraSdk与PlayerView连接所需的参数
+// Parameters required for CameraSdk to connect with PlayerView
 Object getPipeline();
 ```
 
 PlayerViewListener
 
 ```
-// 加载状态发生改变
-// isLoading：是否处于加载中
+// Loading Status Changed
+// isLoading: Whether the player is loading
 onLoadingStatusChanged(boolean isLoading);
 
-// 加载完成
+// Load Finish
 onLoadingFinish();
 
-// 加载失败
-// desc：错误详情
+// Load Failed
+// desc: Error details
 onFail(String desc);
 ```
 
 PlayerGestureListener
 
 ```
-// 按下
+// Touch Down
 onDown(MotionEvent e);
 
-// 点击
+// Click
 onTap(MotionEvent e);
 
-// 抬起
+// Touch Up
 onUp();
 
-// 长按
+// Long Press
 onLongPress(MotionEvent e);
 
-// 缩放
+// Scale
 onZoom();
 onZoomAnimation();
 onZoomAnimationEnd();
 
-// 滑动
+// Scroll
 onScroll();
 onFlingAnimation();
 onFlingAnimationEnd();
@@ -577,26 +583,26 @@ onFlingAnimationEnd();
 CaptureParamsBuilder
 
 ```
-// （必须）配置相机型号，从InstaCameraManager.getInstance().getCameraType()获取
+// (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
 setCameraType(String cameraType);
 
-// （必须）配置文件尾参数，从InstaCameraManager.getInstance().getMediaOffset()获取
+// (Must) Set Media Offset. Get from `InstaCameraManager.getInstance().getMediaOffset()`
 setMediaOffset();
 
-// （可选）设置渲染模式，默认为RENDER_MODE_AUTO
-// RENDER_MODE_AUTO：普通模式，可切换鱼眼、透视预览样式
-// RENDER_MODE_PLANE_STITCH：平铺模式
+// (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
+// RENDER_MODE_AUTO：Normal Mode. Could Switch to `Fisheye Mode` or `Perspective Mode`
+// RENDER_MODE_PLANE_STITCH：Plane Mode
 setRenderModelType(int renderModelType);
 
-// （可选）设置画面横纵比，默认为全屏显示（即充满画布）
-// 如果渲染模式为[平铺模式]，推荐设置比例为2:1
+// (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
+// If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
 setScreenRatio(int ratioX, int ratioY);
 
-// （可选）是否允许手势操作，默认为true
+// (Optional) Whether to allow gesture operations, the default is true
 setGestureEnabled(boolean enabled);
 ```
 
-在`CameraSdk`的`IPreviewStatusListener.onOpened()`回调中播放显示预览
+Display preview in `IPreviewStatusListener.onOpened ()` callback of `CameraSdk`
 
 ```
 @Override
@@ -618,32 +624,32 @@ public void onOpened() {
 
 ## <a name="MediaSDKWorkWrapper" />WorkWrapper
 
-播放、导出等接口需要传递的数据模型
+Data model to be transmitted by interfaces such as play and export
 
 ```
-// 通过媒体文件路径构建
+// Build from media file path
 WorkWrapper workWrapper = new WorkWrapper(String url);
 WorkWrapper workWrapper = new WorkWrapper(String[] urls);
 
-// 获取媒体文件路径
+// Get media file path
 String[] getUrls();
 
-// 判断媒体文件类型
+// Determine the media file type
 boolean isVideo();
 boolean isPhoto();
 
-// 获取唯一标识ID
+// Get unique identification
 String getIdenticalKey()
 ```
 
 
 
-## <a name="MediaSDK获取媒体文件列表" />获取媒体文件列表
+## <a name="MediaSDK获取媒体文件列表" />Get Media File List
 
-### 从相机获取
+### Get from camera
 
 ```
-// 参数从CameraSDK获取
+// Parameters obtained from `CameraSDK`
 List<WorkWrapper> WorkUtils.getAllCameraWorks(
     InstaCameraManager.getInstance().getCameraHttpPrefix(),
     InstaCameraManager.getInstance().getCameraInfoMap(),
@@ -651,46 +657,46 @@ List<WorkWrapper> WorkUtils.getAllCameraWorks(
     InstaCameraManager.getInstance().getRawUrlList());
 ```
 
-### 从本地目录获取
+### Get from local directory
 
 ```
-// dirPath：本地目录路径
+// dirPath: Local directory path
 List<WorkWrapper> getAllLocalWorks(String dirPath);
 ```
 
 
 
-## <a name="MediaSDK播放" />播放
+## <a name="MediaSDK播放" />Player
 
-### 图片
+### Image Player
 
 InstaImagePlayerView
 
 ```
-// 绑定生命周期
+// Bind Lifecycle
 setLifecycle(Lifecycle);
 
-// 设置播放器状态监听
+// Set player status listener
 setPlayerViewListener(PlayerViewListener);
 
-// 设置手势操作监听
+// Set gesture listener
 setGestureListener(PlayerGestureListener);
 
-// 播放前配置参数
+// Configuration parameters before playback
 prepare(WorkWrapper, ImageParamsBuilder);
 
-// 播放
+// Play
 play();
 
-// 释放
+// Release
 destroy();
 ```
 
 ```
-// 判断播放器是否正在加载中
+// Whether the player is loading
 boolean isLoading();
 
-// 获取当前播放角度的数据，供导出缩略图时配置参数使用
+// Get the data of the current playback angle for configuration parameters when exporting thumbnails
 float getFov();
 float getDistance();
 float getYaw();
@@ -699,250 +705,250 @@ float getPitch();
 
 PlayerViewListener
 
-> 详情见`Media SDK功能 - 预览`
+> See`Media SDK Function - Preview`
 
 PlayerGestureListener
 
-> 详情见`Media SDK功能 - 预览`
+> See`Media SDK Function - Preview`
 
 ImageParamsBuilder
 
 ```
-// （可选）是否启用动态拼接，默认为true
+// (Optional) Whether to enable dynamic stitching, the default is true.
 setDynamicStitch(boolean dynamicStitch);
 
-// （可选）设置播放代理文件，例如拼接生成的HDR.jpg，默认为null
+// (Optional) Set playback proxy file, such as HDR.jpg generated by stitching, the default is null
 setUrlForPlay(String url);
 
-// （可选）设置画面横纵比，默认为全屏显示（即充满画布）
+// (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
 setScreenRatio(int ratioX, int ratioY);
 
-// （可选）是否允许手势操作，默认为true
+// (Optional) Whether to allow gesture operations, the default is true
 setGestureEnabled(boolean enabled);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
+// (Optional) Cache Folder，the default is getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/stabilizer"
+// (Optional) Cache Folder，the default is getCacheDir() + "/stabilizer"
 setStabilizerCacheRootPath(String path);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
+// (Optional) Cache Folder，the default is getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
 
-### 视频
+### Video Player
 
 InstaVideoPlayerView
 
 ```
-// 绑定生命周期
+// Bind Lifecycle
 setLifecycle(Lifecycle);
 
-// 设置播放器状态监听
+// Set player status listener
 setPlayerViewListener(PlayerViewListener);
 
-// 设置手势操作监听
+// Set gesture listener
 setGestureListener(PlayerGestureListener);
 
-// 设置视频状态监听
+// Set video status listener
 setVideoStatusListener(VideoStatusListener);
 
-// 播放前配置参数
+// Configuration parameters before playback
 prepare(WorkWrapper, ImageParamsBuilder);
 
-// 播放
+// Play
 play();
 
-// 释放
+// Release
 destroy();
 ```
 
 ```
-// 判断播放器是否正在加载中
+// Whether the player is loading
 boolean isLoading();
 
-// 获取当前播放角度的数据，供导出缩略图时配置参数使用
+// Get the data of the current playback angle for configuration parameters when exporting thumbnails
 float getFov();
 float getDistance();
 float getYaw();
 float getPitch();
 
-// 播放状态
+// Whether the video is playing
 isPlaying();
 
-// 循环播放
+// Whether the video is looping
 setLooping(boolean isLooping);
 isLooping();
 
-// 设置音量(0-1)
+// Set Volume (Range 0-1)
 setVolume(float volume);
 
-// 暂停
+// Pause Video
 pause();
 
-// 恢复
+// Resume Video
 resume();
 
-// 跳转
+// Seek to Play
 seekTo(long position);
 isSeeking();
 
-// 获取当前播放位置
+// Get the current playback position
 getVideoCurrentPosition();
 
-// 获取视频总时长
+// Get video total duration
 getVideoTotalDuration();
 ```
 
 PlayerViewListener
 
-> 详情见`Media SDK功能 - 预览`
+> See`Media SDK Function - Preview`
 
 PlayerGestureListener
 
-> 详情见`Media SDK功能 - 预览`
+> See`Media SDK Function - Preview`
 
 VideoStatusListener
 
 ```
-// 播放进度改变
-// position：当前播放位置
-// length：视频总时长
+// Player progress changed
+// position: the current playback position
+// length: video total duration
 onProgressChanged(long position, long length);
 
-// 播放状态改变
+// Player state changed
 onPlayStateChanged(boolean isPlaying);
 
-// 跳转完成
+// Seek Complete
 onSeekComplete();
 
-// 播放完毕
+// Play Complete
 onCompletion();
 ```
 
 VideoParamsBuilder
 
 ```
-// （可选）加载图标，默认为无
+// (Optional) Loading icon, default is none
 setLoadingImageResId(int resId);
 
-// （可选）加载时的背景色，默认为黑色
+// (Optional) Background color when loading, default is black
 setLoadingBackgroundColor(int color);
 
-// （可选）准备完成后是否自动播放，默认为true
+// (Optional) Whether to play automatically after preparation, the default is true
 setAutoPlayAfterPrepared(boolean autoPlayAfterPrepared);
 
-// （可选）是否循环播放，默认为true
+// (Optional) Whether to loop playback, the default is true
 setIsLooping(boolean isLooping);
 
-// （可选）设置画面横纵比，默认为全屏显示（即充满画布）
+// (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
 setScreenRatio(int ratioX, int ratioY);
 
-// （可选）是否允许手势操作，默认为true
+// (Optional) Whether to allow gesture operations, the default is true
 setGestureEnabled(boolean enabled);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
+// (Optional) Cache Folder，the default is getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
+// (Optional) Cache Folder，the default is getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
 
 
 
-## <a name="MediaSDK导出" />导出
+## <a name="MediaSDK导出" />Export
 
 ExportImageParamsBuilder
 
 ```
-// （必须）设置相机型号名，从InstaCameraManager.getInstance().getCameraType()获取
+// (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
 setCameraType(String cameraType);
 
-// （必须）设置导出文件路径
+// (Must) Set the export file path
 setTargetPath(String path);
 
-// （必须）设置导出图片宽度，需为2的幂数
+// (Must) Set the width of the exported image. It must be a power of 2.
 setWidth(int width);
 
-// （必须）设置导出图片高度，需为2的幂数
+// (Must) Set the height of the exported image. It must be a power of 2.
 setHeight(int height);
 
-// （可选）设置导出模式，默认为PANORAMA
-// ExportMode.PANORAMA：导出全景素材时使用
-// ExportMode.SPHERE：导出平面缩略图时使用
+// (Optional) Set export mode, default is `PANORAMA`
+// ExportMode.PANORAMA: Use when exporting panorama media
+// ExportMode.SPHERE: Used when exporting flat thumbnails
 setExportMode(ExportUtils.ExportMode mode);
 
-// （可选）是否启用动态拼接，默认为true
+// (Optional) Whether to enable dynamic stitching, the default is true.
 setDynamicStitch(boolean dynamicStitch);
 
-// （可选）设置镜头角度，推荐在导出缩略图时使用，可从PlayerView中获取当前显示的角度参数
+// (Optional) Set the camera angle. It is recommended to use when exporting thumbnails. The currently displayed angle parameters can be obtained from `PlayerView`.
 setFov(float fov);
 setDistance(float distance);
 setYaw(float yaw);
 setPitch(float pitch);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
+// (Optional) Cache Folder，the default is getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/stabilizer"
+// (Optional) Cache Folder，the default is getCacheDir() + "/stabilizer"
 setStabilizerCacheRootPath(String path);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
+// (Optional) Cache Folder，the default is getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
 
 ExportVideoParamsBuilder
 
 ```
-// （必须）设置相机型号名，从InstaCameraManager.getInstance().getCameraType()获取
+// (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
 setCameraType(String cameraType);
 
-// （必须）设置导出文件路径
+// (Must) Set the export file path
 setTargetPath(String path);
 
-// （必须）设置导出视频宽度，需为2的幂数
+// (Must) Set the width of the exported video. It must be a power of 2.
 setWidth(int width);
 
-// （必须）设置导出视频高度，需为2的幂数
+// (Must) Set the height of the exported video. It must be a power of 2.
 setHeight(int height);
 
-// （必须）设置导出视频比特率
+// (Must) Set the bitrate of the exported video.
 setBitrate(int bitrate);
 
-// （可选）设置导出模式，默认为PANORAMA
-// ExportMode.PANORAMA：导出全景素材时使用
-// ExportMode.SPHERE：导出平面缩略图时使用
+// (Optional) Set export mode, default is `PANORAMA`
+// ExportMode.PANORAMA: Use when exporting panorama media
+// ExportMode.SPHERE: Used when exporting flat thumbnails
 setExportMode(ExportUtils.ExportMode mode);
 
-// （可选）是否启用动态拼接，默认为true
+// (Optional) Whether to enable dynamic stitching, the default is true.
 setDynamicStitch(boolean dynamicStitch);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
+// (Optional) Cache Folder，the default is getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
 
-// （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
+// (Optional) Cache Folder，the default is getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
 
 IExportCallback
 
 ```
-// 导出成功
+// Export Successful
 onSuccess();
 
-// 导出失败
+// Export Failed
 onFail();
 
-// 停止导出
+// Stop Export
 onCancel();
 
-// 导出进度，仅导出视频时有进度回调
+// Export progress, callback only when exporting video
 onProgress(float progress);
 ```
 
-### 图片
+### Export Image
 
-导出全景图
+Export Panorama Media
 
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
@@ -954,7 +960,7 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 int exportId = ExportUtils.exportImage(WorkWrapper, builder, IExportCallback);
 ```
 
-导出缩略图
+Export Thumbnail
 
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
@@ -970,9 +976,9 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 int exportId = ExportUtils.exportImage(WorkWrapper, builder, IExportCallback);
 ```
 
-### 视频
+### Export Video
 
-导出全景视频
+Export Panorama Media
 
 ```
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
@@ -985,7 +991,7 @@ ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
 int exportId = ExportUtils.exportVideo(WorkWrapper, builder, IExportCallback);
 ```
 
-导出缩略图
+Export Thumbnail
 
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
@@ -1001,7 +1007,7 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 int exportId = ExportUtils.exportVideoToImage(WorkWrapper, builder, IExportCallback);
 ```
 
-### 停止导出
+### Stop Export
 
 ```
 ExportUtils.stopExport(int exportId);
@@ -1009,10 +1015,10 @@ ExportUtils.stopExport(int exportId);
 
 
 
-## <a name="MediaSDK生成HDR图像" />生成HDR图像
+## <a name="MediaSDK生成HDR图像" />Generate HDR Image
 
 ```
 boolean StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
 ```
 
-> 拼接成功后可将outputPath作为代理播放，ImageParamsBuilder.setUrlForPlay(outputPath);
+> After the generate is successful, the outputPath can be played as a proxy. `ImageParamsBuilder.setUrlForPlay(outputPath);`
