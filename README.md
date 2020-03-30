@@ -169,11 +169,14 @@ IPreviewStatusListener
 ```
 // 正在开启预览
 onOpening();
+
 // 预览流已开启，可播放显示
 // 播放操作见[MediaSDK功能 - 预览]
 onOpened();
+
 // 预览已停止
 onIdle();
+
 // 预览开启失败
 onError();
 ```
@@ -191,6 +194,7 @@ onError();
 ```
 // isRaw：如果为true则拍摄RAW格式原图
 InstaCameraManager.getInstance().startNormalCapture(boolean isRaw);
+
 // 判断状态
 InstaCameraManager.getInstance().isNormalCapturing();
 ```
@@ -200,6 +204,7 @@ HDR拍照
 ```
 // isRaw：如果为true则拍摄RAW格式原图
 InstaCameraManager.getInstance().startHDRCapture(false);
+
 // 判断状态
 InstaCameraManager.getInstance().isHDRCapturing();
 ```
@@ -209,10 +214,13 @@ InstaCameraManager.getInstance().isHDRCapturing();
 ```
 // 开始
 InstaCameraManager.getInstance().startIntervalShooting();
+
 // 停止
 InstaCameraManager.getInstance().stopIntervalShooting();
+
 // 判断状态
 InstaCameraManager.getInstance().isIntervalShooting();
+
 // 设置间隔时间，单位ms
 InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
 ```
@@ -222,8 +230,10 @@ InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
 ```
 // 开始
 InstaCameraManager.getInstance().startNormalRecord();
+
 // 停止
 InstaCameraManager.getInstance().stopNormalRecord();
+
 // 判断状态
 InstaCameraManager.getInstance().isNormalRecording();
 ```
@@ -233,8 +243,10 @@ HDR录像
 ```
 // 开始
 InstaCameraManager.getInstance().startHDRRecord();
+
 // 停止
 InstaCameraManager.getInstance().stopHDRRecord();
+
 // 判断状态
 InstaCameraManager.getInstance().isHDRRecording();
 ```
@@ -244,8 +256,10 @@ InstaCameraManager.getInstance().isHDRRecording();
 ```
 // 开始
 InstaCameraManager.getInstance().startTimeLapse();
+
 // 停止
 InstaCameraManager.getInstance().stopTimeLapse();
+
 // 判断状态
 InstaCameraManager.getInstance().isTimeLapsing();
 ```
@@ -261,14 +275,19 @@ ICaptureStatusListener
 ```
 // 开始拍摄
 onCaptureStarting();
+
 // 拍摄中...
 onCaptureWorking();
+
 // 拍摄停止中...
 onCaptureStopping();
+
 // 拍摄结束
 onCaptureFinish();
+
 // 录像时长，单位ms
 onCaptureTimeChanged(long captureTime);
+
 // 间隔拍摄张数
 onCaptureCountChanged(int captureCount);
 ```
@@ -308,6 +327,7 @@ FUNCTION_MODE_TIMELAPSE：延时摄影
 ```
 // 设置
 InstaCameraManager.getInstance().setCameraBeepSwitch(boolean beep);
+
 // 判断
 InstaCameraManager.getInstance().isCameraBeep();
 ```
@@ -331,8 +351,10 @@ ICameraOperateCallback
 ```
 // 操作成功
 onSuccessful();
+
 // 操作失败
 onFailed();
+
 // 相机连接错误导致的失败
 onCameraConnectError();
 ```
@@ -423,16 +445,22 @@ OscOptions oscOptions = builder.build();
 
 // 设置拍摄模式：OscOptions.CAPTURE_MODE_IMAGE/CAPTURE_MODE_VIDEO
 setCaptureMode(@CaptureMode String captureMode)
+
 // 设置曝光模式
 setExposureProgram(@ExposureProgram int exposureProgram);
+
 // 设置ISO
 setISO(@ISO int iso);
+
 // 设置快门速度
 setShutterSpeed(@ShutterSpeed int speed);
+
 // 设置白平衡
 setWhiteBalance(@WhiteBalance String whiteBalance);
+
 // 设置是否启动HDR拍摄
 setHDREnabled(boolean enabled);
+
 // 设置HDR拍摄参数
 setExposureBracketParams(int shots, int increment);
 ```
@@ -442,8 +470,10 @@ IOscCallback
 ```
 // 开始发送OSC命令请求
 onStartRequest();
+
 // 请求成功
 onSuccessful(Object object);
+
 // 请求失败
 onError(String message);
 ```
@@ -467,14 +497,19 @@ InstaCapturePlayerView
 ```
 // 绑定生命周期
 setLifecycle(Lifecycle);
+
 // 设置播放器状态监听
 setPlayerViewListener(PlayerViewListener);
+
 // 设置手势操作监听
 setGestureListener(PlayerGestureListener);
+
 // 播放前配置参数
 prepare(CaptureParamsBuilder);
+
 // 播放
 play();
+
 // 释放
 destroy();
 ```
@@ -482,12 +517,16 @@ destroy();
 ```
 // 切换到普通模式，仅限渲染模式为RENDER_MODE_AUTO时可用
 switchNormalMode();
+
 // 切换到鱼眼模式，仅限渲染模式为RENDER_MODE_AUTO时可用
 switchFisheyeMode();
+
 // 切换到透视模式，仅限渲染模式为RENDER_MODE_AUTO时可用
 switchPerspectiveMode();
+
 // 判断播放器是否正在加载中
 boolean isLoading();
+
 // CameraSdk与PlayerView连接所需的参数
 Object getPipeline();
 ```
@@ -498,8 +537,10 @@ PlayerViewListener
 // 加载状态发生改变
 // isLoading：是否处于加载中
 onLoadingStatusChanged(boolean isLoading);
+
 // 加载完成
 onLoadingFinish();
+
 // 加载失败
 // desc：错误详情
 onFail(String desc);
@@ -510,16 +551,21 @@ PlayerGestureListener
 ```
 // 按下
 onDown(MotionEvent e);
+
 // 点击
 onTap(MotionEvent e);
+
 // 抬起
 onUp();
+
 // 长按
 onLongPress(MotionEvent e);
+
 // 缩放
 onZoom();
 onZoomAnimation();
 onZoomAnimationEnd();
+
 // 滑动
 onScroll();
 onFlingAnimation();
@@ -531,15 +577,19 @@ CaptureParamsBuilder
 ```
 // （必须）配置相机型号，从InstaCameraManager.getInstance().getCameraType()获取
 setCameraType(String cameraType);
+
 // （必须）配置文件尾参数，从InstaCameraManager.getInstance().getMediaOffset()获取
 setMediaOffset();
+
 // （可选）设置渲染模式，默认为RENDER_MODE_AUTO
 // RENDER_MODE_AUTO：普通模式，可切换鱼眼、透视预览样式
 // RENDER_MODE_PLANE_STITCH：平铺模式
 setRenderModelType(int renderModelType);
+
 // （可选）设置画面横纵比，默认为全屏显示（即充满画布）
 // 如果渲染模式为[平铺模式]，推荐设置比例为2:1
 setScreenRatio(int ratioX, int ratioY);
+
 // （可选）是否允许手势操作，默认为true
 setGestureEnabled(boolean enabled);
 ```
@@ -572,11 +622,14 @@ public void onOpened() {
 // 通过媒体文件路径构建
 WorkWrapper workWrapper = new WorkWrapper(String url);
 WorkWrapper workWrapper = new WorkWrapper(String[] urls);
+
 // 获取媒体文件路径
 String[] getUrls();
+
 // 判断媒体文件类型
 boolean isVideo();
 boolean isPhoto();
+
 // 获取唯一标识ID
 String getIdenticalKey()
 ```
@@ -614,14 +667,19 @@ InstaImagePlayerView
 ```
 // 绑定生命周期
 setLifecycle(Lifecycle);
+
 // 设置播放器状态监听
 setPlayerViewListener(PlayerViewListener);
+
 // 设置手势操作监听
 setGestureListener(PlayerGestureListener);
+
 // 播放前配置参数
 prepare(WorkWrapper, ImageParamsBuilder);
+
 // 播放
 play();
+
 // 释放
 destroy();
 ```
@@ -629,6 +687,7 @@ destroy();
 ```
 // 判断播放器是否正在加载中
 boolean isLoading();
+
 // 获取当前播放角度的数据，供导出缩略图时配置参数使用
 float getFov();
 float getDistance();
@@ -648,17 +707,23 @@ ImageParamsBuilder
 
 ```
 // （可选）是否启用动态拼接，默认为true
-setDynamicStitch(boolean dynamicStitch)
+setDynamicStitch(boolean dynamicStitch);
+
 // （可选）设置播放代理文件，例如拼接生成的HDR.jpg，默认为null
 setUrlForPlay(String url);
+
 // （可选）设置画面横纵比，默认为全屏显示（即充满画布）
 setScreenRatio(int ratioX, int ratioY);
+
 // （可选）是否允许手势操作，默认为true
 setGestureEnabled(boolean enabled);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/stabilizer"
 setStabilizerCacheRootPath(String path);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
@@ -670,16 +735,22 @@ InstaVideoPlayerView
 ```
 // 绑定生命周期
 setLifecycle(Lifecycle);
+
 // 设置播放器状态监听
 setPlayerViewListener(PlayerViewListener);
+
 // 设置手势操作监听
 setGestureListener(PlayerGestureListener);
+
 // 设置视频状态监听
 setVideoStatusListener(VideoStatusListener);
+
 // 播放前配置参数
 prepare(WorkWrapper, ImageParamsBuilder);
+
 // 播放
 play();
+
 // 释放
 destroy();
 ```
@@ -687,27 +758,36 @@ destroy();
 ```
 // 判断播放器是否正在加载中
 boolean isLoading();
+
 // 获取当前播放角度的数据，供导出缩略图时配置参数使用
 float getFov();
 float getDistance();
 float getYaw();
 float getPitch();
+
 // 播放状态
 isPlaying();
+
 // 循环播放
 setLooping(boolean isLooping);
 isLooping();
+
 // 设置音量(0-1)
-setVolume(float volume)
+setVolume(float volume);
+
 // 暂停
 pause();
+
 // 恢复
 resume();
+
 // 跳转
 seekTo(long position);
 isSeeking();
+
 // 获取当前播放位置
 getVideoCurrentPosition();
+
 // 获取视频总时长
 getVideoTotalDuration();
 ```
@@ -726,11 +806,14 @@ VideoStatusListener
 // 播放进度改变
 // position：当前播放位置
 // length：视频总时长
-onProgressChanged(long position, long length)
+onProgressChanged(long position, long length);
+
 // 播放状态改变
 onPlayStateChanged(boolean isPlaying);
+
 // 跳转完成
 onSeekComplete();
+
 // 播放完毕
 onCompletion();
 ```
@@ -740,18 +823,25 @@ VideoParamsBuilder
 ```
 // （可选）加载图标，默认为无
 setLoadingImageResId(int resId);
+
 // （可选）加载时的背景色，默认为黑色
 setLoadingBackgroundColor(int color);
+
 // （可选）准备完成后是否自动播放，默认为true
 setAutoPlayAfterPrepared(boolean autoPlayAfterPrepared);
+
 // （可选）是否循环播放，默认为true
 setIsLooping(boolean isLooping);
+
 // （可选）设置画面横纵比，默认为全屏显示（即充满画布）
 setScreenRatio(int ratioX, int ratioY);
+
 // （可选）是否允许手势操作，默认为true
 setGestureEnabled(boolean enabled);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
@@ -765,27 +855,36 @@ ExportImageParamsBuilder
 ```
 // （必须）设置相机型号名，从InstaCameraManager.getInstance().getCameraType()获取
 setCameraType(String cameraType);
+
 // （必须）设置导出文件路径
 setTargetPath(String path);
+
 // （必须）设置导出图片宽度，需为2的幂数
 setWidth(int width);
+
 // （必须）设置导出图片高度，需为2的幂数
 setHeight(int height);
+
 // （可选）设置导出模式，默认为PANORAMA
 // ExportMode.PANORAMA：导出全景素材时使用
 // ExportMode.SPHERE：导出平面缩略图时使用
-setExportMode(ExportUtils.ExportMode mode)
+setExportMode(ExportUtils.ExportMode mode);
+
 // （可选）是否启用动态拼接，默认为true
-setDynamicStitch(boolean dynamicStitch)
+setDynamicStitch(boolean dynamicStitch);
+
 // （可选）设置镜头角度，推荐在导出缩略图时使用，可从PlayerView中获取当前显示的角度参数
 setFov(float fov);
 setDistance(float distance);
 setYaw(float yaw);
 setPitch(float pitch);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/stabilizer"
 setStabilizerCacheRootPath(String path);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
@@ -795,22 +894,30 @@ ExportVideoParamsBuilder
 ```
 // （必须）设置相机型号名，从InstaCameraManager.getInstance().getCameraType()获取
 setCameraType(String cameraType);
+
 // （必须）设置导出文件路径
 setTargetPath(String path);
+
 // （必须）设置导出视频宽度，需为2的幂数
 setWidth(int width);
+
 // （必须）设置导出视频高度，需为2的幂数
 setHeight(int height);
+
 // （必须）设置导出视频比特率
 setBitrate(int bitrate);
+
 // （可选）设置导出模式，默认为PANORAMA
 // ExportMode.PANORAMA：导出全景素材时使用
 // ExportMode.SPHERE：导出平面缩略图时使用
-setExportMode(ExportUtils.ExportMode mode)
+setExportMode(ExportUtils.ExportMode mode);
+
 // （可选）是否启用动态拼接，默认为true
-setDynamicStitch(boolean dynamicStitch)
+setDynamicStitch(boolean dynamicStitch);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/work_thumbnail"
 setCacheWorkThumbnailRootPath(String path);
+
 // （可选）缓存文件目录，默认为getCacheDir() + "/cut_scene"
 setCacheCutSceneRootPath(String path);
 ```
@@ -820,10 +927,13 @@ IExportCallback
 ```
 // 导出成功
 onSuccess();
+
 // 导出失败
 onFail();
+
 // 停止导出
 onCancel();
+
 // 导出进度，仅导出视频时有进度回调
 onProgress(float progress);
 ```
