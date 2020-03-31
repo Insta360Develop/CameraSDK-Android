@@ -387,7 +387,7 @@ IOscRequestDelegate
  * @param headerMap 需要使用的HTTP请求头
  * @return 网络请求响应正文(body)或错误信息(message)
  */
-OSCResult sentRequestByGet(String url, Map<String, String> headerMap);
+OSCResult sendRequestByGet(String url, Map<String, String> headerMap);
 
 /**
  * 以Post的方式发送一个Http网络请求
@@ -397,7 +397,7 @@ OSCResult sentRequestByGet(String url, Map<String, String> headerMap);
  * @param headerMap 需要使用的HTTP请求头
  * @return 网络请求响应正文(body)或错误信息(message)
  */
-OSCResult sentRequestByPost(String url, String content, Map<String, String> headerMap);
+OSCResult sendRequestByPost(String url, String content, Map<String, String> headerMap);
 
 /**
  * 请求结果
