@@ -393,7 +393,7 @@ IOscRequestDelegate
  * @param headerMap HTTP request headers to use
  * @return Network Request Response Body or Error Message
  */
-OSCResult sentRequestByGet(String url, Map<String, String> headerMap);
+OSCResult sendRequestByGet(String url, Map<String, String> headerMap);
 
 /**
  * Send a Http network request by Post
@@ -403,7 +403,7 @@ OSCResult sentRequestByGet(String url, Map<String, String> headerMap);
  * @param headerMap HTTP request headers to use
  * @return Network Request Response Body or Error Message
  */
-OSCResult sentRequestByPost(String url, String content, Map<String, String> headerMap);
+OSCResult sendRequestByPost(String url, String content, Map<String, String> headerMap);
 
 /**
  * Request result
