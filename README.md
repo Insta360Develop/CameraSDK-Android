@@ -8,7 +8,6 @@
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
   - [Connect / Disconnect / Monitor Camera](#CameraSDK连接/断开/监听相机)
-  - [Get Camera Status Properties](#CameraSDK获取相机状态属性)
   - [Get other camera information](#CameraSDK获取相机其他信息)
   - [Preview](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
@@ -28,9 +27,19 @@
 
 ## <a name="CameraSDK初始化" />Initialization
 
+You need to initialize SDK in Application
+
 ```
-// IOscRequestDelegate：If your project uses `OSCManager` provided by the SDK, you need to create a Delegate instance, otherwise you can pass null
-InstaCameraSDK.init(Application, @Nullable IOscRequestDelegate);
+public class MyApp extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();      
+        // Init SDK
+        InstaCameraSDK.init(this);
+    }
+
+}
 ```
 
 
@@ -39,14 +48,39 @@ InstaCameraSDK.init(Application, @Nullable IOscRequestDelegate);
 
 ### Connect
 
+You can connect the camera by WIFI or USB
+
+By WIFI
+
 ```
-// Connect by USB
-InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.USB);
-// Connect by WIFI
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.WIFI);
 ```
 
+By USB
+
+```
+InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.USB);
+```
+
+You can also get the current camera connection type
+
+```
+int type = InstaCameraManager.getInstance().getCameraConnectedType();
+```
+
+And the result is one of `CONNECT_TYPE_NONE`, `CONNECT_TYPE_USB`, `CONNECT_TYPE_WIFI`.
+
+For example if you want to determine if the camera is connected, you can do like this
+
+```
+private boolean isCameraConnected() {
+    return InstaCameraManager.getInstance().getCameraConnectedType() != InstaCameraManager.CONNECT_TYPE_NONE;
+}
+```
+
 ### Close
+
+When you want to disconnect the camera, you can call
 
 ```
 InstaCameraManager.getInstance().closeCamera();
@@ -54,64 +88,81 @@ InstaCameraManager.getInstance().closeCamera();
 
 ### Listener
 
-You can `register / unregister` listen on multiple pages
+You can `register / unregister` `ICameraChangedCallback` on multiple pages to observe camera status changed
 
 ```
-InstaCameraManager.getInstance().registerCameraChangedCallback(ICameraChangedCallback);
-InstaCameraManager.getInstance().unregisterCameraChangedCallback(ICameraChangedCallback);
+public abstract class BaseObserveCameraActivity extends AppCompatActivity implements ICameraChangedCallback {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        InstaCameraManager.getInstance().registerCameraChangedCallback(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        InstaCameraManager.getInstance().unregisterCameraChangedCallback(this);
+    }
+
+    /**
+     * Camera status changed
+     *
+     * @param enabled: Whether the camera is available
+     */
+    @Override
+    public void onCameraStatusChanged(boolean enabled) {
+    }
+
+    /**
+     * Camera connection failed
+     * <p>
+     * A common situation is that other phones or other applications of this phone have already
+     * established a connection with this camera, resulting in this establishment failure,
+     * and other phones need to disconnect from this camera first.
+     */
+    @Override
+    public void onCameraConnectError() {
+    }
+
+    /**
+     * SD card insertion notification
+     *
+     * @param enabled: Whether the current SD card is available
+     */
+    @Override
+    public void onCameraSDCardStateChanged(boolean enabled) {
+    }
+
+    /**
+     * SD card storage status changed
+     *
+     * @param freeSpace:  Currently available size
+     * @param totalSpace: Total size
+     */
+    @Override
+    public void onCameraStorageChanged(long freeSpace, long totalSpace) {
+    }
+
+    /**
+     * Low battery notification
+     */
+    @Override
+    public void onCameraBatteryLow() {
+    }
+
+    /**
+     * Camera power change notification
+     *
+     * @param batteryLevel: Current power (0-100, always returns 100 when charging)
+     * @param isCharging:   Whether the camera is charging
+     */
+    @Override
+    public void onCameraBatteryUpdate(int batteryLevel, boolean isCharging) {
+    }
+
+}
 ```
-
-ICameraChangedCallback
-
-```
-// Camera status changed
-// enabled: Whether the camera is available
-onCameraStatusChanged(boolean enabled);
-
-// Camera connection failed
-// A common situation is that other phones or other applications of this phone have already established a connection with this camera, resulting in this establishment failure, and other phones need to disconnect from this camera first.
-onCameraConnectError();
-
-// SD card insertion notification
-// enabled: Whether the current SD card is available
-onCameraSDCardStateChanged(boolean enabled);
-
-// SD card storage status changed
-// freeSpace: Currently available size
-// totalSpace: Total size
-onCameraStorageChanged(long freeSpace, long totalSpace);
-
-// Low battery notification
-void onCameraBatteryLow();
-
-// Camera power change notification
-// batteryLevel: Current power (0-100, always returns 100 when charging)
-// isCharging: Whether the camera is charging
-onCameraBatteryUpdate(int batteryLevel, boolean isCharging);
-```
-
-
-
-## <a name="CameraSDK获取相机状态属性" />Get Camera Status Properties
-
-Whether the camera is connected
-
-```
-InstaCameraManager.getInstance().isCameraConnected();
-```
-
-Whether the camera is connected by WIFI
-
-```
-InstaCameraManager.getInstance().isCameraConnectedByWifi();
-```
-
-Whether the camera is connected by USB
-
-```
-InstaCameraManager.getInstance().isCameraConnectedByUsb();
-```
-
 
 
 ## <a name="CameraSDK获取相机其他信息" />Get other camera information
