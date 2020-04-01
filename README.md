@@ -11,7 +11,7 @@
   - [Preview](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
-  - [Others](#CameraSDK其他功能)
+  - [Other Function](#CameraSDK其他功能)
   - [Get other camera information](#CameraSDK获取相机其他信息)
   - [OSC](#CameraSDKOSC)
 - [Media SDK Function](#MediaSDK功能)
@@ -328,14 +328,14 @@ InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusList
 
             @Override
             public void onCaptureCountChanged(int captureCount) {
-                // Record Duration, in ms
-                // Only Record type will callback this 
+                // Interval shots
+                // Only Interval Capture type will callback this
             }
 
             @Override
-            public void onCaptureTimeChanged(long captureTime) {
-                // Interval shots
-                // Only Interval Capture type will callback this 
+            public void onCaptureTimeChanged(long captureTime) {            
+                // Record Duration, in ms
+                // Only Record type will callback this 
             }
         });
 ```
@@ -345,76 +345,82 @@ InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusList
 
 ### EV Value
 
-```;
-// Set the EV value of a mode
-// funcMode: Select the Capture Mode when setting the EV value @InstaCameraManager.FunctionMode
-// ev: Range -4 ~ 4
+You can `set / get` the EV value of a certain capture mode. The value range is -4 ~ 4
+
+> `funcMode` is one of `FUNCTION_MODE_CAPTURE_NORMAL`, `FUNCTION_MODE_HDR_CAPTURE`, `FUNCTION_MODE_INTERVAL_SHOOTING`, 
+`FUNCTION_MODE_RECORD_NORMAL`, `FUNCTION_MODE_HDR_RECORD`, `FUNCTION_MODE_BULLETTIME`, `FUNCTION_MODE_TIMELAPSE`
+
+Set value
+
+```
 InstaCameraManager.getInstance().setExposureEV(int funcMode, float ev);
-
-// Get the EV value of a mode
-InstaCameraManager.getInstance().getExposureEV(int funcMode);
 ```
 
-Supported setting modes: InstaCameraManager.FunctionMode
+Get value 
 
 ```
-FUNCTION_MODE_CAPTURE_NORMAL：Normal Capture
-FUNCTION_MODE_HDR_CAPTURE：HDR Capture
-FUNCTION_MODE_INTERVAL_SHOOTING：Interval Capture
-FUNCTION_MODE_RECORD_NORMAL：Normal Record
-FUNCTION_MODE_HDR_RECORD：HDR Record
-FUNCTION_MODE_BULLETTIME：BulletTime
-FUNCTION_MODE_TIMELAPSE：TimeLapse
+float ev = InstaCameraManager.getInstance().getExposureEV(int funcMode);
 ```
+
 
 ### Camera Beep
 
-> Set whether there is a beep sound when the camera shoots
+You can `set / get` whether there is a beep sound when the camera shoots.
+
+Set Beep Enabled
 
 ```
-// Set Beep Enabled
 InstaCameraManager.getInstance().setCameraBeepSwitch(boolean beep);
+```
 
-// Whether beep is enabled
-InstaCameraManager.getInstance().isCameraBeep();
+Determine Whether beep is enabled
+
+```
+boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 ```
 
 
-
-## <a name="CameraSDK其他功能" />Others
+## <a name="CameraSDK其他功能" />Other Function
 
 ### Calibrate Gyro
 
 > This function must be used when the camera is connected to WIFI
 >
-> Before correction, please stand the camera upright on a stable and level surface.
+> Before calibrate, please stand the camera upright on a stable and level surface.
 
 ```
-InstaCameraManager.getInstance().calibrateGyro(ICameraOperateCallback);
-```
+InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
+                    @Override
+                    public void onSuccessful() {
+                    }
 
-ICameraOperateCallback
+                    @Override
+                    public void onFailed() {
+                    }
 
-```
-// Operation Successful
-onSuccessful();
-
-// Operation Failed
-onFailed();
-
-// Failure due to incorrect camera connection
-onCameraConnectError();
+                    @Override
+                    public void onCameraConnectError() {
+                    }
+                });
 ```
 
 ### Format SD card
 
 ```
-InstaCameraManager.getInstance().formatStorage(ICameraOperateCallback);
+InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
+                    @Override
+                    public void onSuccessful() {
+                    }
+
+                    @Override
+                    public void onFailed() {
+                    }
+
+                    @Override
+                    public void onCameraConnectError() {
+                    }
+                });
 ```
-
-ICameraOperateCallback
-
-> See`Calibrate Gyro`
 
 
 
