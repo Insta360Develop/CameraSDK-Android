@@ -17,8 +17,6 @@
 - [Media SDK Function](#MediaSDK功能)
   - [Initialization](#MediaSDK初始化)
   - [Preview](#MediaSDK预览)
-  - [WorkWrapper](#MediaSDKWorkWrapper)
-  - [Get Media File List](#MediaSDK获取媒体文件列表)
   - [Player](#MediaSDK播放)
   - [Export](#MediaSDK导出)
   - [Generate HDR Image](#MediaSDK生成HDR图像)
@@ -836,29 +834,48 @@ String getIdenticalKey()
 
 
 
-## <a name="MediaSDK获取媒体文件列表" />Get Media File List
 
-### Get from camera
+## <a name="MediaSDK播放" />Player
+
+If you want to play an image or a video, you must create a `WorkWrapper` object first.
+
+You can scan media files from camera or a local directory to get `List<WorkWrapper>`.
+
+Scan from camera 
 
 ```
-// Parameters obtained from `CameraSDK`
-List<WorkWrapper> WorkUtils.getAllCameraWorks(
+List<WorkWrapper> list = WorkUtils.getAllCameraWorks(
     InstaCameraManager.getInstance().getCameraHttpPrefix(),
     InstaCameraManager.getInstance().getCameraInfoMap(),
     InstaCameraManager.getInstance().getAllUrlList(),
     InstaCameraManager.getInstance().getRawUrlList());
 ```
 
-### Get from local directory
+Scan from local directory
 
 ```
-// dirPath: Local directory path
-List<WorkWrapper> getAllLocalWorks(String dirPath);
+List<WorkWrapper> list = WorkUtils.getAllLocalWorks(String dirPath);
 ```
 
+or if you have urls of the media file, you can create `WorkWrapper` by yourself.
 
+```
+String[] urls = {img1.insv, img2.insv, img3.insv};
+WorkWrapper workWrapper = new WorkWrapper(urls);
+```
 
-## <a name="MediaSDK播放" />Player
+You can determine whether it is a video or a picture based on the `workWrapper`
+
+```
+boolean isPhoto = workWrapper.isPhoto();
+boolean isVideo = workWrapper.isVideo();
+```
+
+When you need a `Uniquely Identify` of `WorkWrapper`, such as DiskCacheKey of Glide. You can get it by
+
+```
+String id = workWrapper.getIdenticalKey();
+```
 
 ### Image Player
 
