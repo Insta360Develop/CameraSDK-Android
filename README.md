@@ -633,106 +633,27 @@ public class MyApp extends Application {
 
 ## <a name="MediaSDK预览" />Preview
 
-InstaCapturePlayerView
+If you already import `CameraSDK`, you can open and display the preview content.
+
+Put `InstaCapturePlayerView` in your xml file
 
 ```
-// Bind Lifecycle
-setLifecycle(Lifecycle);
-
-// Set player status listener
-setPlayerViewListener(PlayerViewListener);
-
-// Set gesture listener
-setGestureListener(PlayerGestureListener);
-
-// Configuration parameters before playback
-prepare(CaptureParamsBuilder);
-
-// Play
-play();
-
-// Release
-destroy();
+<com.arashivision.sdkmedia.player.capture.InstaCapturePlayerView
+    android:id="@+id/player_capture"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray" />
 ```
 
-```
-// Switch Normal Mode. Available only when the rendering mode is `RENDER_MODE_AUTO`
-switchNormalMode();
-
-// Switch Fisheye Mode. Available only when the rendering mode is `RENDER_MODE_AUTO`
-switchFisheyeMode();
-
-// Switch Perspective Mode. Available only when the rendering mode is `RENDER_MODE_AUTO`
-switchPerspectiveMode();
-
-// Whether the player is loading
-boolean isLoading();
-
-// Parameters required for CameraSdk to connect with PlayerView
-Object getPipeline();
-```
-
-PlayerViewListener
+Bind lifecycle when your activity created
 
 ```
-// Loading Status Changed
-// isLoading: Whether the player is loading
-onLoadingStatusChanged(boolean isLoading);
-
-// Load Finish
-onLoadingFinish();
-
-// Load Failed
-// desc: Error details
-onFail(String desc);
-```
-
-PlayerGestureListener
-
-```
-// Touch Down
-onDown(MotionEvent e);
-
-// Click
-onTap(MotionEvent e);
-
-// Touch Up
-onUp();
-
-// Long Press
-onLongPress(MotionEvent e);
-
-// Scale
-onZoom();
-onZoomAnimation();
-onZoomAnimationEnd();
-
-// Scroll
-onScroll();
-onFlingAnimation();
-onFlingAnimationEnd();
-```
-
-CaptureParamsBuilder
-
-```
-// (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
-setCameraType(String cameraType);
-
-// (Must) Set Media Offset. Get from `InstaCameraManager.getInstance().getMediaOffset()`
-setMediaOffset();
-
-// (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
-// RENDER_MODE_AUTO：Normal Mode. Could Switch to `Fisheye Mode` or `Perspective Mode`
-// RENDER_MODE_PLANE_STITCH：Plane Mode
-setRenderModelType(int renderModelType);
-
-// (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
-// If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
-setScreenRatio(int ratioX, int ratioY);
-
-// (Optional) Whether to allow gesture operations, the default is true
-setGestureEnabled(boolean enabled);
+@Override
+protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_preview);
+    mCapturePlayerView.setLifecycle(getLifecycle());
+}
 ```
 
 Display preview in `IPreviewStatusListener.onOpened ()` callback of `CameraSdk`
@@ -744,13 +665,151 @@ public void onOpened() {
     mCapturePlayerView.setPlayerViewListener(new PlayerViewListener() {
         @Override
         public void onLoadingFinish() {
-        	Object pipeline = mCapturePlayerView.getPipeline();
+            // Must do this
+            Object pipeline = mCapturePlayerView.getPipeline();
             InstaCameraManager.getInstance().setPipeline(pipeline);
+        }
+        
+        @Override
+        public void onLoadingStatusChanged(boolean isLoading) {
+        }
+
+        @Override
+        public void onFail(String desc) {
         }
     });
     mCapturePlayerView.prepare(createParams());
     mCapturePlayerView.play();
 }
+
+private CaptureParamsBuilder createParams() {
+    CaptureParamsBuilder builder = new CaptureParamsBuilder()
+            .setCameraType(InstaCameraManager.getInstance().getCameraType())
+            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset());
+    return builder;
+}
+```
+
+Release `InstaCapturePlayerView` when preview is closed
+
+```
+@Override
+protected void onStop() {
+    super.onStop();
+    // Auto close preview after activity loses focus
+    InstaCameraManager.getInstance().setPreviewStatusChangedListener(null);
+    InstaCameraManager.getInstance().closePreviewStream();
+    mCapturePlayerView.destroy();
+}
+    
+@Override
+public void onIdle() {
+    // Preview Stopped
+    mCapturePlayerView.destroy();
+}
+```
+
+You can configure more options by `CaptureParamsBuilder`
+
+```
+private CaptureParamsBuilder createParams() {
+    CaptureParamsBuilder builder = new CaptureParamsBuilder()
+            // Must. The parameters are fixed
+            .setCameraType(InstaCameraManager.getInstance().getCameraType())
+            // Must. The parameters are fixed
+            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+            // Optional. Whether to allow gesture operations, the default is true
+            .setGestureEnabled(true);
+    if (You want to preview as plane mode) {
+        // Plane Mode
+        // Optional. Set Render Model Type, the default is `RENDER_MODE_AUTO`
+        builder.setRenderModelType(CaptureParamsBuilder.RENDER_MODE_PLANE_STITCH)
+                // Optional. Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
+                // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
+                .setScreenRatio(2, 1);
+    } else {
+        // Normal Mode
+        builder.setRenderModelType(CaptureParamsBuilder.RENDER_MODE_AUTO);
+    }
+    return builder;
+}
+```
+
+if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
+
+Switch to Normal Mode
+
+```
+mCapturePlayerView.switchNormalMode();
+```
+
+Switch to Fisheye Mode
+
+```
+mCapturePlayerView.switchFisheyeMode();
+```
+
+Switch to Perspective Mode
+
+```
+mCapturePlayerView.switchPerspectiveMode();
+```
+
+if you want to switch between `Plane Mode` and others, you must restart preview first.
+
+```
+if (current mode is Normal && new mode is Plane){
+    InstaCameraManager.getInstance().closePreviewStream();
+    InstaCameraManager.getInstance().startPreviewStream();
+}
+```
+
+You can set `PlayerGestureListener` to observe gesture operation.
+
+```
+mCapturePlayerView.setGestureListener(new PlayerGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public boolean onTap(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onUp() {
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+            }
+
+            @Override
+            public void onZoom() {
+            }
+
+            @Override
+            public void onZoomAnimation() {
+            }
+
+            @Override
+            public void onZoomAnimationEnd() {
+            }
+
+            @Override
+            public void onScroll() {
+            }
+
+            @Override
+            public void onFlingAnimation() {
+            }
+
+            @Override
+            public void onFlingAnimationEnd() {
+            }
+        });
 ```
 
 
