@@ -812,29 +812,6 @@ mCapturePlayerView.setGestureListener(new PlayerGestureListener() {
 
 
 
-## <a name="MediaSDKWorkWrapper" />WorkWrapper
-
-Data model to be transmitted by interfaces such as play and export
-
-```
-// Build from media file path
-WorkWrapper workWrapper = new WorkWrapper(String url);
-WorkWrapper workWrapper = new WorkWrapper(String[] urls);
-
-// Get media file path
-String[] getUrls();
-
-// Determine the media file type
-boolean isVideo();
-boolean isPhoto();
-
-// Get unique identification
-String getIdenticalKey()
-```
-
-
-
-
 ## <a name="MediaSDK播放" />Player
 
 If you want to play an image or a video, you must create a `WorkWrapper` object first.
