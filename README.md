@@ -27,11 +27,28 @@
 
 ## <a name="CameraSDK初始化" />Initialization
 
-First import the dependent libraries in your `app.gradle`
+First add the maven address to your build file (`build.gradle` file in the project root directory)
+
+```
+allprojects {
+    repositories {
+        ...
+        maven {
+            url 'http://nexus.arashivision.com:9999/repository/maven-public/'
+            credentials {
+                username = 'deployment'
+                password = 'test123'
+            }
+        }
+    }
+}
+```
+
+Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.1'
+    implementation 'com.arashivision.sdk:sdkcamera:1.0.0'
 }
 ```
 
@@ -571,8 +588,45 @@ InstaCameraManager.getInstance().getCameraInfoMap();
 
 ## <a name="MediaSDK初始化" />Initialization
 
+
+First add the maven address to your build file (`build.gradle` file in the project root directory)
+
 ```
-InstaMediaSDK.init(Application);
+allprojects {
+    repositories {
+        ...
+        maven {
+            url 'http://nexus.arashivision.com:9999/repository/maven-public/'
+            credentials {
+                username = 'deployment'
+                password = 'test123'
+            }
+        }
+    }
+}
+```
+
+Second import the dependent library in your `build.gradle` file of app directory
+
+```
+dependencies {
+    implementation 'com.arashivision.sdk:sdkmedia:1.0.0'
+}
+```
+
+Then initialize SDK in Application
+
+```
+public class MyApp extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();      
+        // Init SDK
+        InstaMediaSDK.init(this);
+    }
+
+}
 ```
 
 
