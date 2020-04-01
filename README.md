@@ -7,7 +7,7 @@
 # Table of Contents
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
-  - [Connect / Disconnect / Monitor Camera](#CameraSDK连接/断开/监听相机)
+  - [Connect / Disconnect / Obersve Camera](#CameraSDK连接/断开/监听相机)
   - [Preview](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
@@ -27,7 +27,15 @@
 
 ## <a name="CameraSDK初始化" />Initialization
 
-You need to initialize SDK in Application
+First import the dependent libraries in your `app.gradle`
+
+```
+dependencies {
+    implementation 'com.arashivision.sdk:sdkcamera:1.0.1'
+}
+```
+
+Then initialize SDK in Application
 
 ```
 public class MyApp extends Application {
@@ -44,11 +52,13 @@ public class MyApp extends Application {
 
 
 
-## <a name="CameraSDK连接/断开/监听相机" />Connect / Disconnect / Listener Camera
+## <a name="CameraSDK连接/断开/监听相机" />Connect / Disconnect / Obersve Camera
 
 ### Connect
 
-You can connect the camera by WIFI or USB
+You can connect the camera by WIFI or USB.
+
+> Note: You must do this on the main thread.
 
 By WIFI
 
@@ -86,7 +96,7 @@ When you want to disconnect the camera, you can call
 InstaCameraManager.getInstance().closeCamera();
 ```
 
-### Listener
+### Obersve
 
 You can `register / unregister` `ICameraChangedCallback` on multiple pages to observe camera status changed
 
@@ -212,55 +222,50 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
 }
 ```
 
-> If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call` closePreviewStream`.
+> If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call `closePreviewStream`.
 
-If you want to show a preview, please see [Media SDK Function - Preview](#MediaSDK预览)
+If you want to display the preview content, please see [Media SDK Function - Preview](#MediaSDK预览)
 
 
 
 ## <a name="CameraSDK拍摄" />Capture
 
-> You can call the Capture Interface after the camera is successfully connected
+After the camera is successfully connected, you can control its capture. We provide you with several capture interfaces.
 
-### Capture Mode
+### Normal Capture
 
-Normal Capture
-
-```
-// isRaw: If true then capture the original image in RAW format
-InstaCameraManager.getInstance().startNormalCapture(boolean isRaw);
-
-// Whether the camera is Normal Capturing
-InstaCameraManager.getInstance().isNormalCapturing();
-```
-
-HDR Capture
+> set `true` if you want to capture the original image in RAW format
 
 ```
-// isRaw：If true then capture the original image in RAW format
+InstaCameraManager.getInstance().startNormalCapture(false);
+```
+
+### HDR Capture
+
+> set `true` if you want to capture the original image in RAW format
+
+```
 InstaCameraManager.getInstance().startHDRCapture(false);
-
-// Whether the camera is HDR Capturing
-InstaCameraManager.getInstance().isHDRCapturing();
 ```
 
-Interval Capture
+### Interval Capture
 
+You can Set interval time first (in ms)
+
+```
+InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
+```
+
+Then capture
 ```
 // Start
 InstaCameraManager.getInstance().startIntervalShooting();
 
 // Stop
 InstaCameraManager.getInstance().stopIntervalShooting();
-
-// Whether the camera is Interval Capturing
-InstaCameraManager.getInstance().isIntervalShooting();
-
-// Set Interval Time，in ms
-InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
 ```
 
-Normal Record
+### Normal Record
 
 ```
 // Start
@@ -268,12 +273,9 @@ InstaCameraManager.getInstance().startNormalRecord();
 
 // Stop
 InstaCameraManager.getInstance().stopNormalRecord();
-
-// Whether the camera is Normal Recording
-InstaCameraManager.getInstance().isNormalRecording();
 ```
 
-HDR Record
+### HDR Record
 
 ```
 // Start
@@ -281,12 +283,9 @@ InstaCameraManager.getInstance().startHDRRecord();
 
 // Stop
 InstaCameraManager.getInstance().stopHDRRecord();
-
-// Whether the camera is HDR Recording
-InstaCameraManager.getInstance().isHDRRecording();
 ```
 
-TimeLapse
+### TimeLapse
 
 ```
 // Start
@@ -294,39 +293,52 @@ InstaCameraManager.getInstance().startTimeLapse();
 
 // Stop
 InstaCameraManager.getInstance().stopTimeLapse();
-
-// Whether the camera is TimeLapsing
-InstaCameraManager.getInstance().isTimeLapsing();
 ```
 
-### Listener Status Changed
+You can also get the current camera capture type
 
 ```
-InstaCameraManager.getInstance().setCaptureStatusListener(ICaptureStatusListener);
+int type = InstaCameraManager.getInstance().getCurrentCaptureType();
 ```
 
-ICaptureStatusListener
+And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTURE`, `CAPTURE_TYPE_INTERVAL_SHOOTING`,
+`CAPTURE_TYPE_NORMAL_RECORD`, `CAPTURE_TYPE_HDR_RECORD`, `CAPTURE_TYPE_TIMELAPSE`, `CAPTURE_TYPE_UNKNOWN`, `CAPTURE_TYPE_IDLE`
+
+### Observe Status Changed
+
+You can set `ICaptureStatusListener` to observe capture status changed.
 
 ```
-// Capture Starting
-onCaptureStarting();
+InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusListener() {
+            @Override
+            public void onCaptureStarting() {
+            }
 
-// Capture Working...
-onCaptureWorking();
+            @Override
+            public void onCaptureWorking() {
+            }
 
-// Capture Stopping...
-onCaptureStopping();
+            @Override
+            public void onCaptureStopping() {
+            }
 
-// Capture Finished
-onCaptureFinish();
+            @Override
+            public void onCaptureFinish() {
+            }
 
-// Record Duration，in ms
-onCaptureTimeChanged(long captureTime);
+            @Override
+            public void onCaptureCountChanged(int captureCount) {
+                // Record Duration, in ms
+                // Only Record type will callback this 
+            }
 
-// Interval shots
-onCaptureCountChanged(int captureCount);
+            @Override
+            public void onCaptureTimeChanged(long captureTime) {
+                // Interval shots
+                // Only Interval Capture type will callback this 
+            }
+        });
 ```
-
 
 
 ## <a name="CameraSDK属性设置" />Settings
