@@ -8,11 +8,11 @@
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
   - [Connect / Disconnect / Monitor Camera](#CameraSDK连接/断开/监听相机)
-  - [Get other camera information](#CameraSDK获取相机其他信息)
   - [Preview](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
   - [Others](#CameraSDK其他功能)
+  - [Get other camera information](#CameraSDK获取相机其他信息)
   - [OSC](#CameraSDKOSC)
 - [Media SDK Function](#MediaSDK功能)
   - [Initialization](#MediaSDK初始化)
@@ -53,13 +53,13 @@ You can connect the camera by WIFI or USB
 By WIFI
 
 ```
-InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.WIFI);
+InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_WIFI);
 ```
 
 By USB
 
 ```
-InstaCameraManager.getInstance().openCamera(InstaCameraManager.ConnectBy.USB);
+InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_USB);
 ```
 
 You can also get the current camera connection type
@@ -165,78 +165,56 @@ public abstract class BaseObserveCameraActivity extends AppCompatActivity implem
 ```
 
 
-## <a name="CameraSDK获取相机其他信息" />Get other camera information
-
-> The following methods are only used as parameters for other interfaces to call. Developers don't need to pay much attention to them, and they will be explained later at the places where they need to be called.
-
-Camera Type
-
-```
-InstaCameraManager.getInstance().getCameraType();
-```
-
-Camera Media Offset
-
-```
-InstaCameraManager.getInstance().getMediaOffset();
-```
-
-Camera Host
-
-```
-InstaCameraManager.getInstance().getCameraHttpPrefix();
-```
-
-Camera File List
-
-```
-InstaCameraManager.getInstance().getAllUrlList();
-InstaCameraManager.getInstance().getRawUrlList();
-InstaCameraManager.getInstance().getCameraInfoMap();
-```
-
-
 
 ## <a name="CameraSDK预览" />Preview
 
-### Open Preview Stream
-
-You can open the preview stream after the camera is successfully connected
+After the camera is successfully connected, you can manipulate the camera preview stream like this
 
 ```
-InstaCameraManager.getInstance().startPreviewStream();
+public class PreviewActivity extends BaseObserveCameraActivity implements IPreviewStatusListener {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Auto open preview after page gets focus
+        InstaCameraManager.getInstance().setPreviewStatusChangedListener(this);
+        InstaCameraManager.getInstance().startPreviewStream();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Auto close preview after page loses focus
+        InstaCameraManager.getInstance().setPreviewStatusChangedListener(null);
+        InstaCameraManager.getInstance().closePreviewStream();
+    }
+
+    @Override
+    public void onOpening() {
+        // Preview Opening       
+    }
+
+    @Override
+    public void onOpened() {
+        // Preview stream is on and can be played      
+    }
+
+    @Override
+    public void onIdle() {
+        // Preview Stopped
+    }
+
+    @Override
+    public void onError() {
+        // Preview Failed
+    }
+
+}
 ```
 
-### Close Preview Stream
+> If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call` closePreviewStream`.
 
-You need to close the preview when exiting the preview page. If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call` closePreviewStream`.
-
-```
-InstaCameraManager.getInstance().closePreviewStream();
-```
-
-### Listener Status Changed
-
-```
-InstaCameraManager.getInstance().setPreviewStatusChangedListener(IPreviewStatusListener);
-```
-
-IPreviewStatusListener
-
-```
-// Opening preview
-onOpening();
-
-// Preview stream is on and can be played
-// See[Media SDK Function - Preview]
-onOpened();
-
-// Preview stopped
-onIdle();
-
-// Preview failed to open
-onError();
-```
+If you want to show a preview, please see [Media SDK Function - Preview](#MediaSDK预览)
 
 
 
@@ -534,6 +512,38 @@ onSuccessful(Object object);
 // Request failed
 onError(String message);
 ```
+
+
+## <a name="CameraSDK获取相机其他信息" />Get other camera information
+
+The following methods are only used as parameters for other interfaces to call. Developers don't need to pay much attention to them, and they will be explained later at the places where they need to be called.
+
+Camera Type
+
+```
+InstaCameraManager.getInstance().getCameraType();
+```
+
+Camera Media Offset
+
+```
+InstaCameraManager.getInstance().getMediaOffset();
+```
+
+Camera Host
+
+```
+InstaCameraManager.getInstance().getCameraHttpPrefix();
+```
+
+Camera File List
+
+```
+InstaCameraManager.getInstance().getAllUrlList();
+InstaCameraManager.getInstance().getRawUrlList();
+InstaCameraManager.getInstance().getCameraInfoMap();
+```
+
 
 ------
 
