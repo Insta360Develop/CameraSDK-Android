@@ -1,9 +1,3 @@
-中文版本请参看[这里](./readme_cn.md)
-
-------
-
-
-
 # Table of Contents
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
