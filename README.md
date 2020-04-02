@@ -40,7 +40,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.1'
+    implementation 'com.arashivision.sdk:sdkcamera:1.0.2'
 }
 ```
 
@@ -494,7 +494,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.0.1'
+    implementation 'com.arashivision.sdk:sdkmedia:1.0.2'
 }
 ```
 
