@@ -40,7 +40,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.0'
+    implementation 'com.arashivision.sdk:sdkcamera:1.0.1'
 }
 ```
 
@@ -494,7 +494,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.0.0'
+    implementation 'com.arashivision.sdk:sdkmedia:1.0.1'
 }
 ```
 
@@ -812,6 +812,26 @@ ImageParamsBuilder builder = new ImageParamsBuilder()
       .setCacheCutSceneRootPath(String path);
 ```
 
+You can switch between the following modes.
+
+Switch to Normal Mode
+
+```
+mImagePlayerView.switchNormalMode();
+```
+
+Switch to Fisheye Mode
+
+```
+mImagePlayerView.switchFisheyeMode();
+```
+
+Switch to Perspective Mode
+
+```
+mImagePlayerView.switchPerspectiveMode();
+```
+
 You can set `PlayerViewListener` to observe player status changed.
 
 ```
@@ -950,10 +970,30 @@ VideoParamsBuilder builder = new VideoParamsBuilder()
       .setCacheCutSceneRootPath(String path);
 ```
 
+You can switch between the following modes.
+
+Switch to Normal Mode
+
+```
+mVideoPlayerView.switchNormalMode();
+```
+
+Switch to Fisheye Mode
+
+```
+mVideoPlayerView.switchFisheyeMode();
+```
+
+Switch to Perspective Mode
+
+```
+mVideoPlayerView.switchPerspectiveMode();
+```
+
 You can set `PlayerViewListener` to observe player status changed.
 
 ```
-mImagePlayerView.setPlayerViewListener(new PlayerViewListener() {
+mVideoPlayerView.setPlayerViewListener(new PlayerViewListener() {
     @Override
     public void onLoadingStatusChanged(boolean isLoading) {
     }
@@ -993,7 +1033,7 @@ mVideoPlayerView.setVideoStatusListener(new VideoStatusListener() {
 You can set `PlayerGestureListener` to observe gesture operation.
 
 ```
-mImagePlayerView.setGestureListener(new PlayerGestureListener() {
+mVideoPlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
         return false;
