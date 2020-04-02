@@ -1328,6 +1328,8 @@ ExportUtils.stopExport(int exportId);
 
 If you have a `WorkWrapper` of HDR Image, you can generate it to one image file by `HDR Stiching`.
 
+> Note: This is a time-consuming operation and needs to be processed in a child thread.
+
 ```
 boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
 ```
