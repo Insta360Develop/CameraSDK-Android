@@ -828,6 +828,8 @@ ImageParamsBuilder builder = new ImageParamsBuilder()
 
 if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
+> if you want to switch between `Plane Mode` and others, you must restart player first.
+
 Switch to Normal Mode
 
 ```
@@ -855,8 +857,6 @@ or You can custom customize the player angle by yourself
 ```
 mImagePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
-
-> if you want to switch between `Plane Mode` and others, you must restart player first.
 
 You can set `PlayerViewListener` to observe player status changed.
 
@@ -1002,6 +1002,8 @@ VideoParamsBuilder builder = new VideoParamsBuilder()
 
 if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
+> if you want to switch between `Plane Mode` and others, you must restart player first.
+
 Switch to Normal Mode
 
 ```
@@ -1029,8 +1031,6 @@ or You can custom customize the player angle by yourself
 ```
 mVideoPlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
-
-> if you want to switch between `Plane Mode` and others, you must restart player first.
 
 You can set `PlayerViewListener` to observe player status changed.
 
