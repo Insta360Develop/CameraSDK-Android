@@ -40,7 +40,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.2'
+    implementation 'com.arashivision.sdk:sdkcamera:1.0.3'
 }
 ```
 
@@ -494,7 +494,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.0.2'
+    implementation 'com.arashivision.sdk:sdkmedia:1.0.3'
 }
 ```
 
@@ -637,6 +637,16 @@ Switch to Perspective Mode
 
 ```
 mCapturePlayerView.switchPerspectiveMode();
+```
+
+or You can custom customize the player angle by yourselt
+
+> Fov: Viewing width. Range 0(inclusive) ~ 180(exclusive)
+>
+> Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
+
+```
+mCapturePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 if you want to switch between `Plane Mode` and others, you must restart preview first.
@@ -832,6 +842,16 @@ Switch to Perspective Mode
 mImagePlayerView.switchPerspectiveMode();
 ```
 
+or You can custom customize the player angle by yourselt
+
+> Fov: Viewing width. Range 0(inclusive) ~ 180(exclusive)
+>
+> Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
+
+```
+mImagePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
+```
+
 You can set `PlayerViewListener` to observe player status changed.
 
 ```
@@ -988,6 +1008,16 @@ Switch to Perspective Mode
 
 ```
 mVideoPlayerView.switchPerspectiveMode();
+```
+
+or You can custom customize the player angle by yourselt
+
+> Fov: Viewing width. Range 0(inclusive) ~ 180(exclusive)
+>
+> Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
+
+```
+mImagePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 You can set `PlayerViewListener` to observe player status changed.
