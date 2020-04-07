@@ -1166,10 +1166,10 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
     // (Must) Set the export file path
     .setTargetPath(String path);
 
-    // (Must) Set the width of the exported image. It must be a power of 2.
+    // (Must) Set the width of the exported image.
     .setWidth(int width);
 
-    // (Must) Set the height of the exported image. It must be a power of 2.
+    // (Must) Set the height of the exported image.
     .setHeight(int height);
 
     // (Optional) Set export mode, default is `PANORAMA`
