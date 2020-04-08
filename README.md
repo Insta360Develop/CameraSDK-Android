@@ -197,8 +197,9 @@ After the camera is successfully connected, you can manipulate the camera previe
 public class PreviewActivity extends BaseObserveCameraActivity implements IPreviewStatusListener {
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_preview);
         // Auto open preview after page gets focus
         InstaCameraManager.getInstance().setPreviewStatusChangedListener(this);
         InstaCameraManager.getInstance().startPreviewStream();
@@ -207,9 +208,11 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
     @Override
     protected void onStop() {
         super.onStop();
-        // Auto close preview after page loses focus
-        InstaCameraManager.getInstance().setPreviewStatusChangedListener(null);
-        InstaCameraManager.getInstance().closePreviewStream();
+        if (isFinishing()) {
+            // Auto close preview after page loses focus
+            InstaCameraManager.getInstance().setPreviewStatusChangedListener(null);
+            InstaCameraManager.getInstance().closePreviewStream();
+        }
     }
 
     @Override
@@ -584,10 +587,12 @@ Release `InstaCapturePlayerView` when preview is closed
 @Override
 protected void onStop() {
     super.onStop();
-    // Auto close preview after activity loses focus
-    InstaCameraManager.getInstance().setPreviewStatusChangedListener(null);
-    InstaCameraManager.getInstance().closePreviewStream();
-    mCapturePlayerView.destroy();
+    if (isFinishing()) {
+        // Auto close preview after page loses focus
+        InstaCameraManager.getInstance().setPreviewStatusChangedListener(null);
+        InstaCameraManager.getInstance().closePreviewStream();
+        mCapturePlayerView.destroy();
+    }
 }
     
 @Override
