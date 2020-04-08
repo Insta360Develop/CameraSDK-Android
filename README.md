@@ -1,3 +1,7 @@
+##### Latest [v1.0.3] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases)
+
+
+
 # Table of Contents
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
