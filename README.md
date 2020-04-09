@@ -1,4 +1,4 @@
-##### Latest [v1.0.3] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases)
+##### Latest [v1.0.4] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases)
 
 
 
@@ -44,7 +44,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.3'
+    implementation 'com.arashivision.sdk:sdkcamera:1.0.4'
 }
 ```
 
@@ -241,6 +241,20 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
 > If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call `closePreviewStream`.
 
 If you want to display the preview content, please see [Media SDK Function - Preview](#MediaSDK预览)
+
+### Preview Stream Resolution
+
+We also provide preview stream resolution options. You can get supported resolution of the camrea by
+
+```
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution();
+```
+
+Then use another method to start preview
+
+```
+InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution);
+```
 
 
 
@@ -501,7 +515,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.0.3'
+    implementation 'com.arashivision.sdk:sdkmedia:1.0.4'
 }
 ```
 
@@ -607,22 +621,34 @@ You can configure more options by `CaptureParamsBuilder`
 ```
 private CaptureParamsBuilder createParams() {
     CaptureParamsBuilder builder = new CaptureParamsBuilder()
-            // Must. The parameters are fixed
+    
+            // (Must) The parameters are fixed
             .setCameraType(InstaCameraManager.getInstance().getCameraType())
-            // Must. The parameters are fixed
+            
+            // (Must) The parameters are fixed
             .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
-            // Optional. Whether to allow gesture operations, the default is true
+            
+            // (Depends on) If you use custom resloution to start preview, this is required.
+            .setResolutionParams(mCurrentResolution.width, mCurrentResolution.height, mCurrentResolution.fps);
+            
+            // (Optional) Whether to allow gesture operations, the default is true
             .setGestureEnabled(true);
+            
     if (You want to preview as plane mode) {
+    
         // Plane Mode
-        // Optional. Set Render Model Type, the default is `RENDER_MODE_AUTO`
+        // (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
         builder.setRenderModelType(CaptureParamsBuilder.RENDER_MODE_PLANE_STITCH)
-                // Optional. Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
+        
+                // (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
                 // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
                 .setScreenRatio(2, 1);
+                
     } else {
+    
         // Normal Mode
         builder.setRenderModelType(CaptureParamsBuilder.RENDER_MODE_AUTO);
+        
     }
     return builder;
 }
@@ -755,6 +781,11 @@ You can determine whether it is a video or an image based on the `workWrapper`
 ```
 boolean isPhoto = workWrapper.isPhoto();
 boolean isVideo = workWrapper.isVideo();
+```
+
+```
+boolean isHDRPhoto = workWrapper.isHDRPhoto();
+boolean isHDRVideo = workWrapper.isHDRVideo();
 ```
 
 When you need a `Uniquely Identify` of `WorkWrapper`, such as DiskCacheKey of Glide. You can get it by
