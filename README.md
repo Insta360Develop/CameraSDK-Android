@@ -280,7 +280,7 @@ InstaCameraManager.getInstance().startHDRCapture(false);
 
 ### Interval Capture
 
-You can Set interval time first (in ms)
+You can set interval time first (in ms)
 
 ```
 InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
@@ -1416,7 +1416,7 @@ If you have a `WorkWrapper` of HDR Image, you can generate it to one image file 
 boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
 ```
 
-After the generate is successful, the outputPath can be played as a proxy.
+After the generateHDR call is successful, the outputPath can be played as a proxy.
 
 ```
 ImageParamsBuilder builder = new ImageParamsBuilder()
