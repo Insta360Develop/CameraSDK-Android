@@ -1,4 +1,4 @@
-##### Latest [v1.0.4] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases) | minSdkVersion 21 | targetSdkVersion 28
+##### ![](https://img.shields.io/badge/version-v1.0.4-green) | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases) | ![](https://img.shields.io/badge/minSdkVersion-21-green) | ![](https://img.shields.io/badge/targetSdkVersion-28-green)
 
 
 
