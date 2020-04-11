@@ -1,6 +1,4 @@
-##### Latest [v1.0.4] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases)
-
-##### minSdkVersion 21 | targetSdkVersion 28
+##### Latest [v1.0.4] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases) | minSdkVersion 21 | targetSdkVersion 28
 
 
 
