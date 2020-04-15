@@ -1473,5 +1473,6 @@ Familiarity with [`Open Spherical Camera API`](https://developers.google.cn/stre
 # <a name="Proguard" />Proguard
 
 ```
+-keep class java.**{*;}
 -keep class com.arashivision.**{*;}
 ```
