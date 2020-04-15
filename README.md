@@ -26,6 +26,7 @@
   - [Export](#MediaSDK导出)
   - [Generate HDR Image](#MediaSDK生成HDR图像)
 - [OSC](#CameraSDKOSC)
+- [Proguard](#Proguard)
   
 # <a name="CameraSDK功能" />Camera SDK Function
 
@@ -1467,3 +1468,10 @@ Familiarity with [`Open Spherical Camera API`](https://developers.google.cn/stre
 
 * You can use [`/osc/info`](https://developers.google.cn/streetview/open-spherical-camera/guides/osc/info) to get the basic information about the camera and functionality it supports.
 * You can use [`/osc/state`](https://developers.google.cn/streetview/open-spherical-camera/guides/osc/state) to get the attributes of the camera.
+
+
+# <a name="Proguard" />Proguard
+
+```
+-keep class com.arashivision.**{*;}
+```
