@@ -479,6 +479,12 @@ Camera Media Offset
 InstaCameraManager.getInstance().getMediaOffset();
 ```
 
+Camera Selfie
+
+```
+InstaCameraManager.getInstance().isCameraSelfie();
+```
+
 Camera Host
 
 ```
@@ -599,7 +605,8 @@ public void onOpened() {
 private CaptureParamsBuilder createParams() {
     CaptureParamsBuilder builder = new CaptureParamsBuilder()
             .setCameraType(InstaCameraManager.getInstance().getCameraType())
-            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset());
+            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+            .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie());
     return builder;
 }
 ```
@@ -636,6 +643,9 @@ private CaptureParamsBuilder createParams() {
             
             // (Must) The parameters are fixed
             .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+
+            // (Must) The parameters are fixed
+            .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
             
             // (Depends on) If you use custom resloution to start preview, this is required.
             .setResolutionParams(mCurrentResolution.width, mCurrentResolution.height, mCurrentResolution.fps);
