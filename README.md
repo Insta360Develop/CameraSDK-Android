@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.0.5-green">
+    <img src="https://img.shields.io/badge/version-1.1.4-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -14,14 +14,14 @@
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
   - [Connect / Disconnect / Obersve Camera](#CameraSDK连接/断开/监听相机)
-  - [Preview](#CameraSDK预览)
+  - [Preview & Live](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
   - [Other Function](#CameraSDK其他功能)
   - [Get other camera information](#CameraSDK获取相机其他信息)
 - [Media SDK Function](#MediaSDK功能)
   - [Initialization](#MediaSDK初始化)
-  - [Preview](#MediaSDK预览)
+  - [Preview & Live](#MediaSDK预览)
   - [Player](#MediaSDK播放)
   - [Export](#MediaSDK导出)
   - [Generate HDR Image](#MediaSDK生成HDR图像)
@@ -53,7 +53,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.5'
+    implementation 'com.arashivision.sdk:sdkcamera:1.1.4'
 }
 ```
 
@@ -198,7 +198,9 @@ public abstract class BaseObserveCameraActivity extends AppCompatActivity implem
 
 
 
-## <a name="CameraSDK预览" />Preview
+## <a name="CameraSDK预览" />Preview & Live
+
+### Preview
 
 After the camera is successfully connected, you can manipulate the camera preview stream like this
 
@@ -249,14 +251,14 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
 
 > If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call `closePreviewStream`.
 
-If you want to display the preview content, please see [Media SDK Function - Preview](#MediaSDK预览)
+If you want to display the preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
 ### Preview Stream Resolution
 
 We also provide preview stream resolution options. You can get supported resolution of the camrea by
 
 ```
-List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution();
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(false);
 ```
 
 Then use another method to start preview
@@ -264,6 +266,24 @@ Then use another method to start preview
 ```
 InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution);
 ```
+
+### Live
+
+You need to get supported resolution of the camrea for live by
+
+```
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(true);
+```
+
+Then choose one resolution to start live preview
+
+```
+InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, true);
+```
+
+> Note: The preview stream is different between `Preview` And `Live`, so you must restart preview stream if you want to switch between them.
+
+If you want to display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
 
 
@@ -362,7 +382,9 @@ InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusList
             }
 
             @Override
-            public void onCaptureFinish() {
+            public void onCaptureFinish(String[] filePaths) {
+                // If you use sdk api to capture, the filePaths could be callback
+                // Otherwise, filePaths will be null
             }
 
             @Override
@@ -473,6 +495,12 @@ Camera Type
 InstaCameraManager.getInstance().getCameraType();
 ```
 
+Camera Version
+
+```
+InstaCameraManager.getInstance().getCameraVersion();
+```
+
 Camera Media Offset
 
 ```
@@ -530,7 +558,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.0.5'
+    implementation 'com.arashivision.sdk:sdkmedia:1.1.4'
 }
 ```
 
@@ -551,7 +579,7 @@ public class MyApp extends Application {
 
 
 
-## <a name="MediaSDK预览" />Preview
+## <a name="MediaSDK预览" />Preview & Live
 
 If you already import `CameraSDK`, you can open and display the preview content.
 
@@ -647,8 +675,14 @@ private CaptureParamsBuilder createParams() {
             // (Must) The parameters are fixed
             .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
             
+            // (Depends on) If you start preview for live, this is required.
+            .setLive(true)
+            
             // (Depends on) If you use custom resloution to start preview, this is required.
             .setResolutionParams(mCurrentResolution.width, mCurrentResolution.height, mCurrentResolution.fps);
+            
+            // (Optional) Whether to enable stabilization, the default is true
+            .setStabEnabled(true)
             
             // (Optional) Whether to allow gesture operations, the default is true
             .setGestureEnabled(true);
@@ -860,29 +894,32 @@ You can configure more options by `ImageParamsBuilder`
 ImageParamsBuilder builder = new ImageParamsBuilder()
 
       // (Optional) Whether to enable dynamic stitching, the default is true.
-      .setDynamicStitch(boolean dynamicStitch);
+      .setDynamicStitch(boolean dynamicStitch)
+      
+      // (Optional) Whether to enable stabilization, the default is true
+      .setStabEnabled(true)
       
       // (Optional) Set playback proxy file, such as HDR.jpg generated by stitching, the default is null
-      .setUrlForPlay(String url);
+      .setUrlForPlay(String url)
       
       // (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
       .setRenderModelType(int renderModeType)
       
       // (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
       // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
-      .setScreenRatio(int ratioX, int ratioY);
+      .setScreenRatio(int ratioX, int ratioY)
       
       // (Optional) Whether to allow gesture operations, the default is true
       .setGestureEnabled(boolean enabled);
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/work_thumbnail"
-      .setCacheWorkThumbnailRootPath(String path);
+      .setCacheWorkThumbnailRootPath(String path)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/stabilizer"
-      .setStabilizerCacheRootPath(String path);
+      .setStabilizerCacheRootPath(String path)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/cut_scene"
-      .setCacheCutSceneRootPath(String path);
+      .setCacheCutSceneRootPath(String path)
 ```
 
 if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
@@ -1031,32 +1068,35 @@ You can configure more options by `VideoParamsBuilder`
 VideoParamsBuilder builder = new VideoParamsBuilder()
 
       // (Optional) Loading icon, default is none
-      .setLoadingImageResId(int resId);
+      .setLoadingImageResId(int resId)
       
       // (Optional) Background color when loading, default is black
-      .setLoadingBackgroundColor(int color);
+      .setLoadingBackgroundColor(int color)
       
       // (Optional) Whether to play automatically after preparation, the default is true
-      .setAutoPlayAfterPrepared(boolean autoPlayAfterPrepared);
+      .setAutoPlayAfterPrepared(boolean autoPlayAfterPrepared)
+      
+      // (Optional) Whether to enable stabilization, the default is true
+      .setStabEnabled(true)
       
       // (Optional) Whether to loop playback, the default is true
-      .setIsLooping(boolean isLooping);
+      .setIsLooping(boolean isLooping)
       
       // (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
       .setRenderModelType(int renderModeType)
       
       // (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
       // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
-      .setScreenRatio(int ratioX, int ratioY);
+      .setScreenRatio(int ratioX, int ratioY)
       
       // (Optional) Whether to allow gesture operations, the default is true
-      .setGestureEnabled(boolean enabled);
+      .setGestureEnabled(boolean enabled)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/work_thumbnail"
-      .setCacheWorkThumbnailRootPath(String path);
+      .setCacheWorkThumbnailRootPath(String path)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/cut_scene"
-      .setCacheCutSceneRootPath(String path);
+      .setCacheCutSceneRootPath(String path)
 ```
 
 if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
@@ -1219,75 +1259,84 @@ if you want to export an image, you need to know `ExportImageParamsBuilder` firs
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 
-    // (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
-    .setCameraType(String cameraType);
-
     // (Must) Set the export file path
-    .setTargetPath(String path);
+    .setTargetPath(String path)
 
-    // (Must) Set the width of the exported image.
-    .setWidth(int width);
+    // (Optional) Set the width of the exported image, the default is get from WorkWapper.
+    .setWidth(int width)
 
-    // (Must) Set the height of the exported image.
-    .setHeight(int height);
+    // (Optional) Set the height of the exported image, the default is get from WorkWapper.
+    .setHeight(int height)
 
     // (Optional) Set export mode, default is `PANORAMA`
     // ExportMode.PANORAMA: Use when exporting panorama media
     // ExportMode.SPHERE: Use when exporting flat thumbnails
-    .setExportMode(ExportUtils.ExportMode mode);
+    .setExportMode(ExportUtils.ExportMode mode)
 
     // (Optional) Whether to enable dynamic stitching, the default is true.
-    .setDynamicStitch(boolean dynamicStitch);
+    .setDynamicStitch(boolean dynamicStitch)
 
+    // (Optional) Whether to enable stabilization, the default is true
+    .setStabEnabled(true)
+    
+    // (Optional) Set such as HDR.jpg generated by stitching, the default is null
+    .setUrlForExport(String url)
+      
     // (Optional) Set the camera angle. It is recommended to use when exporting thumbnails. 
     // The currently displayed angle parameters can be obtained from `PlayerView.getXXX()`.
-    .setFov(float fov);
-    .setDistance(float distance);
-    .setYaw(float yaw);
-    .setPitch(float pitch);
+    .setFov(float fov)
+    .setDistance(float distance)
+    .setYaw(float yaw)
+    .setPitch(float pitch)
 
     // (Optional) Cache Folder, the default is getCacheDir() + "/work_thumbnail"
-    .setCacheWorkThumbnailRootPath(String path);
+    .setCacheWorkThumbnailRootPath(String path)
 
     // (Optional) Cache Folder, the default is getCacheDir() + "/stabilizer"
-    .setStabilizerCacheRootPath(String path);
+    .setStabilizerCacheRootPath(String path)
 
     // (Optional) Cache Folder, the default is getCacheDir() + "/cut_scene"
-    .setCacheCutSceneRootPath(String path);
+    .setCacheCutSceneRootPath(String path)
 ```
 
 if you want to export a video, you need to know `ExportVideoParamsBuilder` first. 
 
+> Note: Exporting videos has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system during export, please set a smaller width and height.
+
 ```
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
-    // (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
-    .setCameraType(String cameraType);
 
     // (Must) Set the export file path
-    .setTargetPath(String path);
+    .setTargetPath(String path)
 
-    // (Must) Set the width of the exported video. It must be a power of 2.
-    .setWidth(int width);
+    // (Optional) Set the width of the exported video. It must be a power of 2, the default is get from WorkWapper.
+    .setWidth(int width)
 
-    // (Must) Set the height of the exported video. It must be a power of 2.
-    .setHeight(int height);
+    // (Optional) Set the height of the exported video. It must be a power of 2, the default is get from WorkWapper.
+    .setHeight(int height)
 
-    // (Must) Set the bitrate of the exported video.
-    .setBitrate(int bitrate);
+    // (Optional) Set the bitrate of the exported video, the default is get from WorkWapper.
+    .setBitrate(int bitrate)
+    
+    // (Optional) Set the fps of the exported video, the default is get from WorkWapper.
+    .setFps(int fps)
 
     // (Optional) Set export mode, default is `PANORAMA`
     // ExportMode.PANORAMA: Use when exporting panorama media
     // ExportMode.SPHERE: Used when exporting flat thumbnails
-    .setExportMode(ExportUtils.ExportMode mode);
+    .setExportMode(ExportUtils.ExportMode mode)
 
     // (Optional) Whether to enable dynamic stitching, the default is true.
-    .setDynamicStitch(boolean dynamicStitch);
-
+    .setDynamicStitch(boolean dynamicStitch)
+    
+    // (Optional) Whether to enable stabilization, the default is true
+    .setStabEnabled(true)
+    
     // (Optional) Cache Folder，the default is getCacheDir() + "/work_thumbnail"
-    .setCacheWorkThumbnailRootPath(String path);
+    .setCacheWorkThumbnailRootPath(String path)
 
     // (Optional) Cache Folder，the default is getCacheDir() + "/cut_scene"
-    .setCacheCutSceneRootPath(String path);
+    .setCacheCutSceneRootPath(String path)
 ```
 
 Next let's see how to export
@@ -1363,7 +1412,8 @@ ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
         .setTargetPath(path)
         .setWidth(2048)
         .setHeight(1024)
-        .setBitrate(20 * 1024 * 1024);
+        .setBitrate(20 * 1024 * 1024)
+        .setFps(30);
 int exportId = ExportUtils.exportVideo(WorkWrapper, builder, new IExportCallback() {
             @Override
             public void onSuccess() {               
@@ -1430,20 +1480,30 @@ ExportUtils.stopExport(int exportId);
 If you have a `WorkWrapper` of HDR Image, you can generate it to one image file by `HDR Stiching`.
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread.
+>
+> Note: Only local file could be generate, please download the files from camera first.
 
 ```
-boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
+boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String hdrOutputPath);
 ```
 
-After the generate is successful, the outputPath can be played as a proxy.
+After the generate is successful, the outputPath can be played as a proxy or set as export url.
 
 ```
 ImageParamsBuilder builder = new ImageParamsBuilder()
         // If HDR stitching is successful then set it as the playback proxy
-        .setUrlForPlay(isSuccessful ? outputPath : null);
+        .setUrlForPlay(isSuccessful ? hdrOutputPath : null);
 mImagePlayerView.prepare(workWrapper, builder);
 mImagePlayerView.play();
 ```
+
+```
+ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
+        .setExportMode(ExportUtils.ExportMode.PANORAMA)
+        .setTargetPath(exportPath)
+        .setUrlForExport(hdrOutputPath);
+```
+
 
 
 # <a name="CameraSDKOSC" />OSC
