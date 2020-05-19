@@ -281,7 +281,7 @@ Then choose one resolution to start live preview
 InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, true);
 ```
 
-> Note: The preview stream is different between `Preview` And `Live`, so you must restart preview stream if you want to switch between them.
+> Note: The preview stream is different between `Preview` and `Live`, so you must restart preview stream if you want to switch between them.
 
 If you want to display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
@@ -1480,7 +1480,7 @@ ExportUtils.stopExport(int exportId);
 If you have a `WorkWrapper` of HDR Image, you can generate it to one image file by `HDR Stiching`.
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread.
->
+
 > Note: Only local file could be generate, please download the files from camera first.
 
 ```
