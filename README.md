@@ -285,6 +285,48 @@ InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, tru
 
 If you want to display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
+When the preview is ready, you can start live like this
+
+```
+LiveParamsBuilder builder = new LiveParamsBuilder()
+
+        // (Must) Set the rtmp adress to push stream
+        .setRtmp(String rtmp)
+        
+        // (Must) Set width to push, such as 1440
+        .setWidth(int width)
+        
+        // (Must) Set height to push, such as 720
+        .setHeight(int height)
+        
+        // (Must) Set fps to push, such as 30
+        .setFps(int fps)
+        
+        // (Must) Set bitrate to push, such as 2*1024*1024
+        .setBitrate(int bitrate)
+        
+        // (Optional) Whether the live is panorama or not, the default value is true
+        .setPanorama(true);
+        
+InstaCameraManager.getInstance().startLive(builder, new ILiveStatusListener() {
+        @Override
+        public void onLivePushStarted() {
+        }
+
+        @Override
+        public void onLivePushFinished() {
+        }
+
+        @Override
+        public void onLivePushError() {
+        }
+
+        @Override
+        public void onLiveFpsUpdate(int fps) {
+        }
+    });
+```
+
 
 
 ## <a name="CameraSDK拍摄" />Capture
