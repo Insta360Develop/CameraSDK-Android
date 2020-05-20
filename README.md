@@ -307,7 +307,7 @@ LiveParamsBuilder builder = new LiveParamsBuilder()
         
         // (Optional) Whether the live is panorama or not, the default value is true
         .setPanorama(true);
-        
+     
 InstaCameraManager.getInstance().startLive(builder, new ILiveStatusListener() {
         @Override
         public void onLivePushStarted() {
@@ -325,6 +325,12 @@ InstaCameraManager.getInstance().startLive(builder, new ILiveStatusListener() {
         public void onLiveFpsUpdate(int fps) {
         }
     });
+```
+
+You can stop live by this
+
+```
+InstaCameraManager.getInstance().stopLive();
 ```
 
 
