@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.1.4-green">
+    <img src="https://img.shields.io/badge/version-1.1.8-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -53,7 +53,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.1.4'
+    implementation 'com.arashivision.sdk:sdkcamera:1.1.8'
 }
 ```
 
@@ -213,7 +213,7 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
         setContentView(R.layout.activity_preview);
         // Auto open preview after page gets focus
         InstaCameraManager.getInstance().setPreviewStatusChangedListener(this);
-        InstaCameraManager.getInstance().startPreviewStream();
+        InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution.STREAM_1440_720_30FPS, InstaCameraManager.PREVIEW_TYPE_NORMAL);
     }
 
     @Override
@@ -255,33 +255,35 @@ If you want to display the preview content, please see [Media SDK Function - Pre
 
 ### Preview Stream Resolution
 
-We also provide preview stream resolution options. You can get supported resolution of the camrea by
+You can choose one of the resolutions supported by the camera to set arguments. Get the supported resolutions by
 
 ```
-List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(false);
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(int previewType);
 ```
 
-Then use another method to start preview
+### Preview Type
 
-```
-InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution);
-```
+There are 3 kinds of `PreviewType` in `InstaCameraManager`. You must restart preview stream (close first and then start again) to switch between different operations.
+
+* PREVIEW_TYPE_NORMAL - for normal preview or capture
+* PREVIEW_TYPE_RECORD - for record
+* PREVIEW_TYPE_LIVE - for live
 
 ### Live
 
 You need to get supported resolution of the camrea for live by
 
 ```
-List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(true);
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
 
 Then choose one resolution to start live preview
 
 ```
-InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, true);
+InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
 
-> Note: The preview stream is different between `Preview` and `Live`, so you must restart preview stream if you want to switch between them.
+> Note: The preview stream is different between `Preview`, `Record` and `Live`, so you must restart preview stream if you want to switch between them.
 
 If you want to display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
@@ -357,7 +359,7 @@ InstaCameraManager.getInstance().startHDRCapture(false);
 
 ### Interval Capture
 
-You can Set interval time first (in ms)
+You can set interval time first (in ms)
 
 ```
 InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
@@ -394,6 +396,13 @@ InstaCameraManager.getInstance().stopHDRRecord();
 
 ### TimeLapse
 
+You can set interval time first (in ms)
+
+```
+InstaCameraManager.getInstance().setTimeLapseInterval(int intervalMs);
+```
+
+Then record
 ```
 // Start
 InstaCameraManager.getInstance().startTimeLapse();
@@ -408,8 +417,8 @@ You can also get the current camera capture type
 int type = InstaCameraManager.getInstance().getCurrentCaptureType();
 ```
 
-And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTURE`, `CAPTURE_TYPE_INTERVAL_SHOOTING`,
-`CAPTURE_TYPE_NORMAL_RECORD`, `CAPTURE_TYPE_HDR_RECORD`, `CAPTURE_TYPE_TIMELAPSE`, `CAPTURE_TYPE_UNKNOWN`, `CAPTURE_TYPE_IDLE`
+And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTURE`, `CAPTURE_TYPE_INTERVAL_SHOOTING`, `CAPTURE_TYPE_NIGHT_SCENE_CAPTURE`,
+`CAPTURE_TYPE_BURST_CAPTURE`, `CAPTURE_TYPE_NORMAL_RECORD`, `CAPTURE_TYPE_HDR_RECORD`, `CAPTURE_TYPE_TIMELAPSE`, `CAPTURE_TYPE_STATIC_TIMELAPSE`, `CAPTURE_TYPE_BULLET_TIME_RECORD`, `CAPTURE_TYPE_TIME_SHIFT_RECORD`, `CAPTURE_TYPE_INTERVAL_RECORD`, `CAPTURE_TYPE_UNKNOWN`, `CAPTURE_TYPE_IDLE`
 
 ### Observe Status Changed
 
@@ -549,6 +558,12 @@ Camera Version
 InstaCameraManager.getInstance().getCameraVersion();
 ```
 
+Camera Serial
+
+```
+InstaCameraManager.getInstance().getCameraSerial();
+```
+
 Camera Media Offset
 
 ```
@@ -559,6 +574,36 @@ Camera Selfie
 
 ```
 InstaCameraManager.getInstance().isCameraSelfie();
+```
+
+Camera Battery Level
+
+```
+InstaCameraManager.getInstance().getCameraCurrentBatteryLevel();
+```
+
+Camera Charge State
+
+```
+InstaCameraManager.getInstance().isCameraCharging();
+```
+
+Camera Storage Total Space
+
+```
+InstaCameraManager.getInstance().getCameraStorageTotalSpace();
+```
+
+Camera Storage Free Space
+
+```
+InstaCameraManager.getInstance().getCameraStorageFreeSpace();
+```
+
+Camera SD card state
+
+```
+InstaCameraManager.getInstance().isSdCardEnabled();
 ```
 
 Camera Host
@@ -606,7 +651,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.1.4'
+    implementation 'com.arashivision.sdk:sdkmedia:1.1.8'
 }
 ```
 
@@ -733,7 +778,12 @@ private CaptureParamsBuilder createParams() {
             .setStabEnabled(true)
             
             // (Optional) Whether to allow gesture operations, the default is true
-            .setGestureEnabled(true);
+            .setGestureEnabled(true)
+            
+            // (Optional) If you want to show preview stream on your custom surface
+            // (Note) Every time you open a new preview, you must create a new Surface and pass in parameters. You cannot reuse Surface
+            // (Note) Destroy your surface when priview is idle
+            .setCameraRenderSurfaceInfo(surface, surfaceWidth, surfaceHeight);
             
     if (You want to preview as plane mode) {
     
@@ -790,7 +840,7 @@ if you want to switch between `Plane Mode` and others, you must restart preview 
 ```
 if (current mode is Normal && new mode is Plane){
     InstaCameraManager.getInstance().closePreviewStream();
-    InstaCameraManager.getInstance().startPreviewStream();
+    InstaCameraManager.getInstance().startPreviewStream(resolution, previewType);
 }
 ```
 
@@ -852,7 +902,7 @@ You can scan media files from camera or a local directory to get `List<WorkWrapp
 
 Scan from camera 
 
-> Note: This is a time-consuming operation and needs to be processed in a child thread.
+> Note: This is a time-consuming operation and needs to be processed in a child thread. Not recommended for non-essential situations, you can get the file path and store it after shooting.
 
 ```
 List<WorkWrapper> list = WorkUtils.getAllCameraWorks(
@@ -875,6 +925,15 @@ or if you have urls of the media file, you can also create `WorkWrapper` by your
 ```
 String[] urls = {img1.insv, img2.insv, img3.insv};
 WorkWrapper workWrapper = new WorkWrapper(urls);
+```
+
+You can get the media info based on the `workWrapper`
+
+```
+int width = workWrapper.getWidth();
+int height = workWrapper.getHeight();
+int bitrate = workWrapper.getBitrate();
+double fps = workWrapper.getFps();
 ```
 
 You can determine whether it is a video or an image based on the `workWrapper`
@@ -1394,7 +1453,6 @@ Export Panorama Image (Image to Image)
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(2048)
         .setHeight(1024);
@@ -1423,7 +1481,6 @@ Export Image Thumbnail (Image to Image)
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.SPHERE)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(512)
         .setHeight(512)
@@ -1453,10 +1510,11 @@ int exportId = ExportUtils.exportImage(WorkWrapper, builder, new IExportCallback
 
 Export Panorama Video (Video to Video)
 
+> Note: Exporting video has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system when exporting 5.7k, please set a smaller width and height or increase app priority.
+
 ```
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(2048)
         .setHeight(1024)
@@ -1487,7 +1545,6 @@ Export Video Thumbnail (Video to Image)
 ```
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.SPHERE)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(512)
         .setHeight(512)
