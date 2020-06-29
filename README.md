@@ -875,7 +875,7 @@ You can get the media info based from the `workWrapper`
 
 |Method|Type|Explanation|
 |---|---|---|
-|getIdenticalKey()|String|`Uniquely Identify`, used for `DiskCacheKey of Glide` or others|
+|getIdenticalKey()|String|Uniquely Identify, used for `DiskCacheKey of Glide` or others|
 |getUrls()|String[]|Get media file urls|
 |getWidth()|int|Get media width|
 |getHeight()|int|Get media height|
