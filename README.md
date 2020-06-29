@@ -34,7 +34,7 @@
 
 First add the maven address to your build file (`build.gradle` file in the project root directory)
 
-```
+```Groovy
 allprojects {
     repositories {
         ...
@@ -51,7 +51,7 @@ allprojects {
 
 Second import the dependent library in your `build.gradle` file of app directory
 
-```
+```Groovy
 dependencies {
     implementation 'com.arashivision.sdk:sdkcamera:1.1.8'
 }
@@ -59,7 +59,7 @@ dependencies {
 
 Then initialize SDK in Application
 
-```
+```Java
 public class MyApp extends Application {
 
     @Override
@@ -84,19 +84,19 @@ You can connect the camera by WIFI or USB.
 
 By WIFI
 
-```
+```Java
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_WIFI);
 ```
 
 By USB
 
-```
+```Java
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_USB);
 ```
 
 You can also get the current camera connection type
 
-```
+```Java
 int type = InstaCameraManager.getInstance().getCameraConnectedType();
 ```
 
@@ -104,7 +104,7 @@ And the result is one of `CONNECT_TYPE_NONE`, `CONNECT_TYPE_USB`, `CONNECT_TYPE_
 
 For example if you want to determine if the camera is connected, you can do like this
 
-```
+```Java
 private boolean isCameraConnected() {
     return InstaCameraManager.getInstance().getCameraConnectedType() != InstaCameraManager.CONNECT_TYPE_NONE;
 }
@@ -114,7 +114,7 @@ private boolean isCameraConnected() {
 
 When you want to disconnect the camera, you can call
 
-```
+```Java
 InstaCameraManager.getInstance().closeCamera();
 ```
 
@@ -122,7 +122,7 @@ InstaCameraManager.getInstance().closeCamera();
 
 You can `register / unregister` `ICameraChangedCallback` on multiple pages to observe camera status changed
 
-```
+```Java
 public abstract class BaseObserveCameraActivity extends AppCompatActivity implements ICameraChangedCallback {
 
     @Override
@@ -204,7 +204,7 @@ public abstract class BaseObserveCameraActivity extends AppCompatActivity implem
 
 After the camera is successfully connected, you can manipulate the camera preview stream like this
 
-```
+```Java
 public class PreviewActivity extends BaseObserveCameraActivity implements IPreviewStatusListener {
 
     @Override
@@ -257,7 +257,7 @@ If you want to display the preview content, please see [Media SDK Function - Pre
 
 You can choose one of the resolutions supported by the camera to set arguments. Get the supported resolutions by
 
-```
+```Java
 List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(int previewType);
 ```
 
@@ -273,13 +273,13 @@ There are 3 kinds of `PreviewType` in `InstaCameraManager`. You must restart pre
 
 You need to get supported resolution of the camrea for live by
 
-```
+```Java
 List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
 
 Then choose one resolution to start live preview
 
-```
+```Java
 InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
 
@@ -289,7 +289,7 @@ If you want to display the live preview content, please see [Media SDK Function 
 
 When the preview is ready, you can start live like this
 
-```
+```Java
 LiveParamsBuilder builder = new LiveParamsBuilder()
 
         // (Must) Set the rtmp adress to push stream
@@ -331,7 +331,7 @@ InstaCameraManager.getInstance().startLive(builder, new ILiveStatusListener() {
 
 You can stop live by this
 
-```
+```Java
 InstaCameraManager.getInstance().stopLive();
 ```
 
@@ -345,7 +345,7 @@ After the camera is successfully connected, you can control its capture. We prov
 
 > set `true` if you want to capture the original image in RAW format
 
-```
+```Java
 InstaCameraManager.getInstance().startNormalCapture(false);
 ```
 
@@ -353,7 +353,7 @@ InstaCameraManager.getInstance().startNormalCapture(false);
 
 > set `true` if you want to capture the original image in RAW format
 
-```
+```Java
 InstaCameraManager.getInstance().startHDRCapture(false);
 ```
 
@@ -361,12 +361,12 @@ InstaCameraManager.getInstance().startHDRCapture(false);
 
 You can set interval time first (in ms)
 
-```
+```Java
 InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
 ```
 
 Then capture
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startIntervalShooting();
 
@@ -376,7 +376,7 @@ InstaCameraManager.getInstance().stopIntervalShooting();
 
 ### Normal Record
 
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startNormalRecord();
 
@@ -386,7 +386,7 @@ InstaCameraManager.getInstance().stopNormalRecord();
 
 ### HDR Record
 
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startHDRRecord();
 
@@ -398,12 +398,12 @@ InstaCameraManager.getInstance().stopHDRRecord();
 
 You can set interval time first (in ms)
 
-```
+```Java
 InstaCameraManager.getInstance().setTimeLapseInterval(int intervalMs);
 ```
 
 Then record
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startTimeLapse();
 
@@ -413,7 +413,7 @@ InstaCameraManager.getInstance().stopTimeLapse();
 
 You can also get the current camera capture type
 
-```
+```Java
 int type = InstaCameraManager.getInstance().getCurrentCaptureType();
 ```
 
@@ -424,7 +424,7 @@ And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTUR
 
 You can set `ICaptureStatusListener` to observe capture status changed.
 
-```
+```Java
 InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusListener() {
             @Override
             public void onCaptureStarting() {
@@ -470,13 +470,13 @@ You can `set / get` the EV value of a certain capture mode. The value range is -
 
 Set value
 
-```
+```Java
 InstaCameraManager.getInstance().setExposureEV(int funcMode, float ev);
 ```
 
 Get value 
 
-```
+```Java
 float ev = InstaCameraManager.getInstance().getExposureEV(int funcMode);
 ```
 
@@ -487,13 +487,13 @@ You can `set / get` whether there is a beep sound when the camera shoots.
 
 Set Beep Enabled
 
-```
+```Java
 InstaCameraManager.getInstance().setCameraBeepSwitch(boolean beep);
 ```
 
 Determine Whether beep is enabled
 
-```
+```Java
 boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 ```
 
@@ -506,7 +506,7 @@ boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 >
 > Before calibrate, please stand the camera upright on a stable and level surface.
 
-```
+```Java
 InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
                     @Override
                     public void onSuccessful() {
@@ -524,7 +524,7 @@ InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
 
 ### Format SD card
 
-```
+```Java
 InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
                     @Override
                     public void onSuccessful() {
@@ -548,43 +548,43 @@ The following methods are only used as parameters for other interfaces to call. 
 
 Camera Type
 
-```
+```Java
 InstaCameraManager.getInstance().getCameraType();
 ```
 
 Camera Version
 
-```
+```Java
 InstaCameraManager.getInstance().getCameraVersion();
 ```
 
 Camera Serial
 
-```
+```Java
 InstaCameraManager.getInstance().getCameraSerial();
 ```
 
 Camera Media Offset
 
-```
+```Java
 InstaCameraManager.getInstance().getMediaOffset();
 ```
 
 Camera Selfie
 
-```
+```Java
 InstaCameraManager.getInstance().isCameraSelfie();
 ```
 
 Camera Battery Level
 
-```
+```Java
 InstaCameraManager.getInstance().getCameraCurrentBatteryLevel();
 ```
 
 Camera Charge State
 
-```
+```Java
 InstaCameraManager.getInstance().isCameraCharging();
 ```
 
@@ -632,7 +632,7 @@ InstaCameraManager.getInstance().getCameraInfoMap();
 
 First add the maven address to your build file (`build.gradle` file in the project root directory)
 
-```
+```Groovy
 allprojects {
     repositories {
         ...
@@ -649,7 +649,7 @@ allprojects {
 
 Second import the dependent library in your `build.gradle` file of app directory
 
-```
+```Groovy
 dependencies {
     implementation 'com.arashivision.sdk:sdkmedia:1.1.8'
 }
@@ -657,7 +657,7 @@ dependencies {
 
 Then initialize SDK in Application
 
-```
+```Java
 public class MyApp extends Application {
 
     @Override
@@ -678,7 +678,7 @@ If you already import `CameraSDK`, you can open and display the preview content.
 
 Put `InstaCapturePlayerView` in your xml file
 
-```
+```xml
 <com.arashivision.sdkmedia.player.capture.InstaCapturePlayerView
     android:id="@+id/player_capture"
     android:layout_width="match_parent"
@@ -688,7 +688,7 @@ Put `InstaCapturePlayerView` in your xml file
 
 Bind lifecycle when your activity created
 
-```
+```Java
 @Override
 protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -699,7 +699,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 Display preview in `IPreviewStatusListener.onOpened ()` callback of `CameraSdk`
 
-```
+```Java
 @Override
 public void onOpened() {
     InstaCameraManager.getInstance().setStreamEncode();
@@ -734,7 +734,7 @@ private CaptureParamsBuilder createParams() {
 
 Release `InstaCapturePlayerView` when preview is closed
 
-```
+```Java
 @Override
 protected void onStop() {
     super.onStop();
@@ -755,7 +755,7 @@ public void onIdle() {
 
 You can configure more options by `CaptureParamsBuilder`
 
-```
+```Java
 private CaptureParamsBuilder createParams() {
     CaptureParamsBuilder builder = new CaptureParamsBuilder()
     
@@ -809,19 +809,19 @@ if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
 Switch to Normal Mode
 
-```
+```Java
 mCapturePlayerView.switchNormalMode();
 ```
 
 Switch to Fisheye Mode
 
-```
+```Java
 mCapturePlayerView.switchFisheyeMode();
 ```
 
 Switch to Perspective Mode
 
-```
+```Java
 mCapturePlayerView.switchPerspectiveMode();
 ```
 
@@ -831,13 +831,13 @@ or You can custom customize the player angle by yourself
 >
 > Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
 
-```
+```Java
 mCapturePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 if you want to switch between `Plane Mode` and others, you must restart preview first.
 
-```
+```Java
 if (current mode is Normal && new mode is Plane){
     InstaCameraManager.getInstance().closePreviewStream();
     InstaCameraManager.getInstance().startPreviewStream(resolution, previewType);
@@ -846,7 +846,7 @@ if (current mode is Normal && new mode is Plane){
 
 You can set `PlayerGestureListener` to observe gesture operation.
 
-```
+```Java
 mCapturePlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
@@ -904,7 +904,7 @@ Scan from camera
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread. Not recommended for non-essential situations, you can get the file path and store it after shooting.
 
-```
+```Java
 List<WorkWrapper> list = WorkUtils.getAllCameraWorks(
     InstaCameraManager.getInstance().getCameraHttpPrefix(),
     InstaCameraManager.getInstance().getCameraInfoMap(),
@@ -916,20 +916,20 @@ Scan from local directory
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread.
 
-```
+```Java
 List<WorkWrapper> list = WorkUtils.getAllLocalWorks(String dirPath);
 ```
 
 or if you have urls of the media file, you can also create `WorkWrapper` by yourself.
 
-```
+```Java
 String[] urls = {img1.insv, img2.insv, img3.insv};
 WorkWrapper workWrapper = new WorkWrapper(urls);
 ```
 
 You can get the media info based on the `workWrapper`
 
-```
+```Java
 int width = workWrapper.getWidth();
 int height = workWrapper.getHeight();
 int bitrate = workWrapper.getBitrate();
@@ -938,19 +938,19 @@ double fps = workWrapper.getFps();
 
 You can determine whether it is a video or an image based on the `workWrapper`
 
-```
+```Java
 boolean isPhoto = workWrapper.isPhoto();
 boolean isVideo = workWrapper.isVideo();
 ```
 
-```
+```Java
 boolean isHDRPhoto = workWrapper.isHDRPhoto();
 boolean isHDRVideo = workWrapper.isHDRVideo();
 ```
 
 When you need a `Uniquely Identify` of `WorkWrapper`, such as DiskCacheKey of Glide. You can get it by
 
-```
+```Java
 String id = workWrapper.getIdenticalKey();
 ```
 
@@ -960,7 +960,7 @@ You can play an image by `InstaImagePlayerView`.
 
 Put `InstaImagePlayerView` in your xml file
 
-```
+```xml
 <com.arashivision.sdkmedia.player.image.InstaImagePlayerView
     android:id="@+id/player_image"
     android:layout_width="match_parent"
@@ -969,7 +969,7 @@ Put `InstaImagePlayerView` in your xml file
 
 Bind lifecycle when your activity created
 
-```
+```Java
 @Override
 protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -980,14 +980,14 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 Build parameters and play
 
-```
+```Java
 mImagePlayerView.prepare(workWrapper, new ImageParamsBuilder());
 mImagePlayerView.play();
 ```
 
 Release `InstaImagePlayerView` when activity is destory
 
-```
+```Java
 @Override
 protected void onDestroy() {
     super.onDestroy();
@@ -997,7 +997,7 @@ protected void onDestroy() {
 
 You can configure more options by `ImageParamsBuilder`
 
-```
+```Java
 ImageParamsBuilder builder = new ImageParamsBuilder()
 
       // (Optional) Whether to enable dynamic stitching, the default is true.
@@ -1035,19 +1035,19 @@ if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
 Switch to Normal Mode
 
-```
+```Java
 mImagePlayerView.switchNormalMode();
 ```
 
 Switch to Fisheye Mode
 
-```
+```Java
 mImagePlayerView.switchFisheyeMode();
 ```
 
 Switch to Perspective Mode
 
-```
+```Java
 mImagePlayerView.switchPerspectiveMode();
 ```
 
@@ -1057,13 +1057,13 @@ or You can custom customize the player angle by yourself
 >
 > Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
 
-```
+```Java
 mImagePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 You can set `PlayerViewListener` to observe player status changed.
 
-```
+```Java
 mImagePlayerView.setPlayerViewListener(new PlayerViewListener() {
     @Override
     public void onLoadingStatusChanged(boolean isLoading) {
@@ -1081,7 +1081,7 @@ mImagePlayerView.setPlayerViewListener(new PlayerViewListener() {
 
 You can set `PlayerGestureListener` to observe gesture operation.
 
-```
+```Java
 mImagePlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
@@ -1134,7 +1134,7 @@ You can play a video by `InstaVideoPlayerView`.
 
 Put `InstaVideoPlayerView` in your xml file
 
-```
+```xml
 <com.arashivision.sdkmedia.player.video.InstaVideoPlayerView
     android:id="@+id/player_video"
     android:layout_width="match_parent"
@@ -1143,7 +1143,7 @@ Put `InstaVideoPlayerView` in your xml file
 
 Bind lifecycle when your activity created
 
-```
+```Java
 @Override
 protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -1154,14 +1154,14 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 Build parameters and play
 
-```
+```Java
 mVideoPlayerView.prepare(workWrapper, new VideoParamsBuilder());
 mVideoPlayerView.play();
 ```
 
 Release `InstaVideoPlayerView` when activity is destory
 
-```
+```Java
 @Override
 protected void onDestroy() {
     super.onDestroy();
@@ -1171,7 +1171,7 @@ protected void onDestroy() {
 
 You can configure more options by `VideoParamsBuilder`
 
-```
+```Java
 VideoParamsBuilder builder = new VideoParamsBuilder()
 
       // (Optional) Loading icon, default is none
@@ -1212,19 +1212,19 @@ if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
 Switch to Normal Mode
 
-```
+```Java
 mVideoPlayerView.switchNormalMode();
 ```
 
 Switch to Fisheye Mode
 
-```
+```Java
 mVideoPlayerView.switchFisheyeMode();
 ```
 
 Switch to Perspective Mode
 
-```
+```Java
 mVideoPlayerView.switchPerspectiveMode();
 ```
 
@@ -1234,13 +1234,13 @@ or You can custom customize the player angle by yourself
 >
 > Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
 
-```
+```Java
 mVideoPlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 You can set `PlayerViewListener` to observe player status changed.
 
-```
+```Java
 mVideoPlayerView.setPlayerViewListener(new PlayerViewListener() {
     @Override
     public void onLoadingStatusChanged(boolean isLoading) {
@@ -1258,7 +1258,7 @@ mVideoPlayerView.setPlayerViewListener(new PlayerViewListener() {
 
 You can set `VideoStatusListener` to observe video status changed.
 
-```
+```Java
 mVideoPlayerView.setVideoStatusListener(new VideoStatusListener() {
     @Override
     public void onProgressChanged(long position, long length) {
@@ -1280,7 +1280,7 @@ mVideoPlayerView.setVideoStatusListener(new VideoStatusListener() {
 
 You can set `PlayerGestureListener` to observe gesture operation.
 
-```
+```Java
 mVideoPlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
@@ -1328,7 +1328,7 @@ mVideoPlayerView.setGestureListener(new PlayerGestureListener() {
 
 Other `VideoPlayerView` operates
 
-```
+```Java
 // Whether the video is playing
 isPlaying();
 
@@ -1363,7 +1363,7 @@ You can export `WorkWrapper` to an image or a video file.
 
 if you want to export an image, you need to know `ExportImageParamsBuilder` first.
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 
     // (Must) Set the export file path
@@ -1410,7 +1410,7 @@ if you want to export a video, you need to know `ExportVideoParamsBuilder` first
 
 > Note: Exporting videos has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system during export, please set a smaller width and height.
 
-```
+```Java
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
 
     // (Must) Set the export file path
@@ -1450,7 +1450,7 @@ Next let's see how to export
 
 Export Panorama Image (Image to Image)
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
         .setTargetPath(path)
@@ -1478,7 +1478,7 @@ int exportId = ExportUtils.exportImage(WorkWrapper, builder, new IExportCallback
 
 Export Image Thumbnail (Image to Image)
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.SPHERE)
         .setTargetPath(path)
@@ -1512,7 +1512,7 @@ Export Panorama Video (Video to Video)
 
 > Note: Exporting video has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system when exporting 5.7k, please set a smaller width and height or increase app priority.
 
-```
+```Java
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
         .setTargetPath(path)
@@ -1542,7 +1542,7 @@ int exportId = ExportUtils.exportVideo(WorkWrapper, builder, new IExportCallback
 
 Export Video Thumbnail (Video to Image)
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.SPHERE)
         .setTargetPath(path)
@@ -1574,7 +1574,7 @@ int exportId = ExportUtils.exportVideoToImage(WorkWrapper, builder, new IExportC
 
 You can stop export by the `exportId` returned by `ExportUtils.exportXXX()`
 
-```
+```Java
 ExportUtils.stopExport(int exportId);
 ```
 
@@ -1588,13 +1588,13 @@ If you have a `WorkWrapper` of HDR Image, you can generate it to one image file 
 
 > Note: Only local file could be generate, please download the files from camera first.
 
-```
+```Java
 boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String hdrOutputPath);
 ```
 
 After the generate is successful, the outputPath can be played as a proxy or set as export url.
 
-```
+```Java
 ImageParamsBuilder builder = new ImageParamsBuilder()
         // If HDR stitching is successful then set it as the playback proxy
         .setUrlForPlay(isSuccessful ? hdrOutputPath : null);
@@ -1602,7 +1602,7 @@ mImagePlayerView.prepare(workWrapper, builder);
 mImagePlayerView.play();
 ```
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
         .setTargetPath(exportPath)
