@@ -546,79 +546,23 @@ InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
 
 The following methods are only used as parameters for other interfaces to call. Developers don't need to pay much attention to them, and they will be explained later at the places where they need to be called.
 
-Camera Type
+> InstaCameraManager.getInstance().xxx();
 
-```Java
-InstaCameraManager.getInstance().getCameraType();
-```
+|Method|Type|Explanation|
+|---|---|---|
+|getCameraType()|String|Camera Type|
+|getCameraVersion()|String|Camera Version|
+|getCameraSerial()|String|Camera Serial|
+|getMediaOffset()|String|Camera Media Offset|
+|isCameraSelfie()|boolean|Camera Selfie|
+|getCameraCurrentBatteryLevel()|int|Camera Battery Level, form 0 to 100|
+|isCameraCharging()|boolean|Camera Charge State|
+|getCameraStorageTotalSpace()|long|Camera Storage Total Space, bytes|
+|getCameraStorageFreeSpace()|long|Camera Storage Free Space, bytes|
+|isSdCardEnabled()|boolean|Camera SD card state|
+|getCameraHttpPrefix()|String|Camera Host|
+|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|String|Camera File List|
 
-Camera Version
-
-```Java
-InstaCameraManager.getInstance().getCameraVersion();
-```
-
-Camera Serial
-
-```Java
-InstaCameraManager.getInstance().getCameraSerial();
-```
-
-Camera Media Offset
-
-```Java
-InstaCameraManager.getInstance().getMediaOffset();
-```
-
-Camera Selfie
-
-```Java
-InstaCameraManager.getInstance().isCameraSelfie();
-```
-
-Camera Battery Level
-
-```Java
-InstaCameraManager.getInstance().getCameraCurrentBatteryLevel();
-```
-
-Camera Charge State
-
-```Java
-InstaCameraManager.getInstance().isCameraCharging();
-```
-
-Camera Storage Total Space
-
-```
-InstaCameraManager.getInstance().getCameraStorageTotalSpace();
-```
-
-Camera Storage Free Space
-
-```
-InstaCameraManager.getInstance().getCameraStorageFreeSpace();
-```
-
-Camera SD card state
-
-```
-InstaCameraManager.getInstance().isSdCardEnabled();
-```
-
-Camera Host
-
-```
-InstaCameraManager.getInstance().getCameraHttpPrefix();
-```
-
-Camera File List
-
-```
-InstaCameraManager.getInstance().getAllUrlList();
-InstaCameraManager.getInstance().getRawUrlList();
-InstaCameraManager.getInstance().getCameraInfoMap();
-```
 
 
 ------
@@ -927,32 +871,25 @@ String[] urls = {img1.insv, img2.insv, img3.insv};
 WorkWrapper workWrapper = new WorkWrapper(urls);
 ```
 
-You can get the media info based on the `workWrapper`
+You can get the media info based from the `workWrapper`
 
-```Java
-int width = workWrapper.getWidth();
-int height = workWrapper.getHeight();
-int bitrate = workWrapper.getBitrate();
-double fps = workWrapper.getFps();
-```
+|Method|Type|Explanation|
+|---|---|---|
+|getIdenticalKey()|String|`Uniquely Identify`, used for `DiskCacheKey of Glide` or others|
+|getUrls()|String[]|Get media file urls|
+|getWidth()|int|Get media width|
+|getHeight()|int|Get media height|
+|getBitrate()|int|Get video bitrate, return 0 if is photo|
+|getFps()|double|Get video fps, return 0 if is photo|
+|isPhoto()|boolean|Whether the media is photo|
+|isHDRPhoto()|boolean|Whether the media is hdr photo|
+|isVideo()|boolean|Whether the media is video|
+|isHDRVideo()|boolean|Whether the media is hdr video|
+|isCameraFile()|boolean|Whether the media file is from camera|
+|isLocalFile()|boolean|Whether the media is is from device|
+|getCreationTime()|long|Get media capture timestamp, in ms|
+|getGyroInfo()|GyroInfo[]|Get media gyro data|
 
-You can determine whether it is a video or an image based on the `workWrapper`
-
-```Java
-boolean isPhoto = workWrapper.isPhoto();
-boolean isVideo = workWrapper.isVideo();
-```
-
-```Java
-boolean isHDRPhoto = workWrapper.isHDRPhoto();
-boolean isHDRVideo = workWrapper.isHDRVideo();
-```
-
-When you need a `Uniquely Identify` of `WorkWrapper`, such as DiskCacheKey of Glide. You can get it by
-
-```Java
-String id = workWrapper.getIdenticalKey();
-```
 
 ### Image Player
 
