@@ -41,8 +41,9 @@ allprojects {
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
             credentials {
-                username = 'deployment'
-                password = 'test123'
+                // see sdk demo
+                username = '***'
+                password = '***'
             }
         }
     }
@@ -583,8 +584,9 @@ allprojects {
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
             credentials {
-                username = 'deployment'
-                password = 'test123'
+                // see sdk demo
+                username = '***'
+                password = '***'
             }
         }
     }
