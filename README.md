@@ -1,4 +1,12 @@
-##### Latest [v1.0.4] | [View version update details](https://github.com/Insta360Develop/CameraSDK-Android/releases)
+<a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
+    <img src="https://img.shields.io/badge/version-1.1.8-green">
+</a> 
+<a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
+    <img src="https://img.shields.io/badge/minSdkVersion-21-green">
+</a> 
+<a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
+    <img src="https://img.shields.io/badge/targetSdkVersion-28-green">
+</a> 
 
 
 
@@ -6,18 +14,19 @@
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
   - [Connect / Disconnect / Obersve Camera](#CameraSDK连接/断开/监听相机)
-  - [Preview](#CameraSDK预览)
+  - [Preview & Live](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
   - [Other Function](#CameraSDK其他功能)
   - [Get other camera information](#CameraSDK获取相机其他信息)
 - [Media SDK Function](#MediaSDK功能)
   - [Initialization](#MediaSDK初始化)
-  - [Preview](#MediaSDK预览)
+  - [Preview & Live](#MediaSDK预览)
   - [Player](#MediaSDK播放)
   - [Export](#MediaSDK导出)
   - [Generate HDR Image](#MediaSDK生成HDR图像)
 - [OSC](#CameraSDKOSC)
+- [Proguard](#Proguard)
   
 # <a name="CameraSDK功能" />Camera SDK Function
 
@@ -25,15 +34,16 @@
 
 First add the maven address to your build file (`build.gradle` file in the project root directory)
 
-```
+```Groovy
 allprojects {
     repositories {
         ...
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
             credentials {
-                username = 'deployment'
-                password = 'test123'
+                // see sdk demo
+                username = '***'
+                password = '***'
             }
         }
     }
@@ -42,15 +52,15 @@ allprojects {
 
 Second import the dependent library in your `build.gradle` file of app directory
 
-```
+```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.0.4'
+    implementation 'com.arashivision.sdk:sdkcamera:1.1.8'
 }
 ```
 
 Then initialize SDK in Application
 
-```
+```Java
 public class MyApp extends Application {
 
     @Override
@@ -75,19 +85,19 @@ You can connect the camera by WIFI or USB.
 
 By WIFI
 
-```
+```Java
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_WIFI);
 ```
 
 By USB
 
-```
+```Java
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_USB);
 ```
 
 You can also get the current camera connection type
 
-```
+```Java
 int type = InstaCameraManager.getInstance().getCameraConnectedType();
 ```
 
@@ -95,7 +105,7 @@ And the result is one of `CONNECT_TYPE_NONE`, `CONNECT_TYPE_USB`, `CONNECT_TYPE_
 
 For example if you want to determine if the camera is connected, you can do like this
 
-```
+```Java
 private boolean isCameraConnected() {
     return InstaCameraManager.getInstance().getCameraConnectedType() != InstaCameraManager.CONNECT_TYPE_NONE;
 }
@@ -105,7 +115,7 @@ private boolean isCameraConnected() {
 
 When you want to disconnect the camera, you can call
 
-```
+```Java
 InstaCameraManager.getInstance().closeCamera();
 ```
 
@@ -113,7 +123,7 @@ InstaCameraManager.getInstance().closeCamera();
 
 You can `register / unregister` `ICameraChangedCallback` on multiple pages to observe camera status changed
 
-```
+```Java
 public abstract class BaseObserveCameraActivity extends AppCompatActivity implements ICameraChangedCallback {
 
     @Override
@@ -189,11 +199,13 @@ public abstract class BaseObserveCameraActivity extends AppCompatActivity implem
 
 
 
-## <a name="CameraSDK预览" />Preview
+## <a name="CameraSDK预览" />Preview & Live
+
+### Preview
 
 After the camera is successfully connected, you can manipulate the camera preview stream like this
 
-```
+```Java
 public class PreviewActivity extends BaseObserveCameraActivity implements IPreviewStatusListener {
 
     @Override
@@ -202,7 +214,7 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
         setContentView(R.layout.activity_preview);
         // Auto open preview after page gets focus
         InstaCameraManager.getInstance().setPreviewStatusChangedListener(this);
-        InstaCameraManager.getInstance().startPreviewStream();
+        InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution.STREAM_1440_720_30FPS, InstaCameraManager.PREVIEW_TYPE_NORMAL);
     }
 
     @Override
@@ -240,20 +252,88 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
 
 > If the camera is passively disconnected or if you call `closeCamera` directly during the preview process, the SDK will automatically close the preview stream processing related state without the need to call `closePreviewStream`.
 
-If you want to display the preview content, please see [Media SDK Function - Preview](#MediaSDK预览)
+If you want to display the preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
 ### Preview Stream Resolution
 
-We also provide preview stream resolution options. You can get supported resolution of the camrea by
+You can choose one of the resolutions supported by the camera to set arguments. Get the supported resolutions by
 
-```
-List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution();
+```Java
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(int previewType);
 ```
 
-Then use another method to start preview
+### Preview Type
 
+There are 3 kinds of `PreviewType` in `InstaCameraManager`. You must restart preview stream (close first and then start again) to switch between different operations.
+
+* PREVIEW_TYPE_NORMAL - for normal preview or capture
+* PREVIEW_TYPE_RECORD - for record
+* PREVIEW_TYPE_LIVE - for live
+
+### Live
+
+You need to get supported resolution of the camrea for live by
+
+```Java
+List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
-InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution);
+
+Then choose one resolution to start live preview
+
+```Java
+InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, InstaCameraManager.PREVIEW_TYPE_LIVE);
+```
+
+> Note: The preview stream is different between `Preview`, `Record` and `Live`, so you must restart preview stream if you want to switch between them.
+
+If you want to display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
+
+When the preview is ready, you can start live like this
+
+```Java
+LiveParamsBuilder builder = new LiveParamsBuilder()
+
+        // (Must) Set the rtmp adress to push stream
+        .setRtmp(String rtmp)
+        
+        // (Must) Set width to push, such as 1440
+        .setWidth(int width)
+        
+        // (Must) Set height to push, such as 720
+        .setHeight(int height)
+        
+        // (Must) Set fps to push, such as 30
+        .setFps(int fps)
+        
+        // (Must) Set bitrate to push, such as 2*1024*1024
+        .setBitrate(int bitrate)
+        
+        // (Optional) Whether the live is panorama or not, the default value is true
+        .setPanorama(true);
+     
+InstaCameraManager.getInstance().startLive(builder, new ILiveStatusListener() {
+        @Override
+        public void onLivePushStarted() {
+        }
+
+        @Override
+        public void onLivePushFinished() {
+        }
+
+        @Override
+        public void onLivePushError() {
+        }
+
+        @Override
+        public void onLiveFpsUpdate(int fps) {
+        }
+    });
+```
+
+You can stop live by this
+
+```Java
+InstaCameraManager.getInstance().stopLive();
 ```
 
 
@@ -266,7 +346,7 @@ After the camera is successfully connected, you can control its capture. We prov
 
 > set `true` if you want to capture the original image in RAW format
 
-```
+```Java
 InstaCameraManager.getInstance().startNormalCapture(false);
 ```
 
@@ -274,7 +354,7 @@ InstaCameraManager.getInstance().startNormalCapture(false);
 
 > set `true` if you want to capture the original image in RAW format
 
-```
+```Java
 InstaCameraManager.getInstance().startHDRCapture(false);
 ```
 
@@ -282,12 +362,12 @@ InstaCameraManager.getInstance().startHDRCapture(false);
 
 You can set interval time first (in ms)
 
-```
+```Java
 InstaCameraManager.getInstance().setIntervalTime(int intervalMs);
 ```
 
 Then capture
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startIntervalShooting();
 
@@ -297,7 +377,7 @@ InstaCameraManager.getInstance().stopIntervalShooting();
 
 ### Normal Record
 
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startNormalRecord();
 
@@ -307,7 +387,7 @@ InstaCameraManager.getInstance().stopNormalRecord();
 
 ### HDR Record
 
-```
+```Java
 // Start
 InstaCameraManager.getInstance().startHDRRecord();
 
@@ -317,7 +397,14 @@ InstaCameraManager.getInstance().stopHDRRecord();
 
 ### TimeLapse
 
+You can set interval time first (in ms)
+
+```Java
+InstaCameraManager.getInstance().setTimeLapseInterval(int intervalMs);
 ```
+
+Then record
+```Java
 // Start
 InstaCameraManager.getInstance().startTimeLapse();
 
@@ -327,18 +414,18 @@ InstaCameraManager.getInstance().stopTimeLapse();
 
 You can also get the current camera capture type
 
-```
+```Java
 int type = InstaCameraManager.getInstance().getCurrentCaptureType();
 ```
 
-And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTURE`, `CAPTURE_TYPE_INTERVAL_SHOOTING`,
-`CAPTURE_TYPE_NORMAL_RECORD`, `CAPTURE_TYPE_HDR_RECORD`, `CAPTURE_TYPE_TIMELAPSE`, `CAPTURE_TYPE_UNKNOWN`, `CAPTURE_TYPE_IDLE`
+And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTURE`, `CAPTURE_TYPE_INTERVAL_SHOOTING`, `CAPTURE_TYPE_NIGHT_SCENE_CAPTURE`,
+`CAPTURE_TYPE_BURST_CAPTURE`, `CAPTURE_TYPE_NORMAL_RECORD`, `CAPTURE_TYPE_HDR_RECORD`, `CAPTURE_TYPE_TIMELAPSE`, `CAPTURE_TYPE_STATIC_TIMELAPSE`, `CAPTURE_TYPE_BULLET_TIME_RECORD`, `CAPTURE_TYPE_TIME_SHIFT_RECORD`, `CAPTURE_TYPE_INTERVAL_RECORD`, `CAPTURE_TYPE_UNKNOWN`, `CAPTURE_TYPE_IDLE`
 
 ### Observe Status Changed
 
 You can set `ICaptureStatusListener` to observe capture status changed.
 
-```
+```Java
 InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusListener() {
             @Override
             public void onCaptureStarting() {
@@ -353,7 +440,9 @@ InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusList
             }
 
             @Override
-            public void onCaptureFinish() {
+            public void onCaptureFinish(String[] filePaths) {
+                // If you use sdk api to capture, the filePaths could be callback
+                // Otherwise, filePaths will be null
             }
 
             @Override
@@ -382,13 +471,13 @@ You can `set / get` the EV value of a certain capture mode. The value range is -
 
 Set value
 
-```
+```Java
 InstaCameraManager.getInstance().setExposureEV(int funcMode, float ev);
 ```
 
 Get value 
 
-```
+```Java
 float ev = InstaCameraManager.getInstance().getExposureEV(int funcMode);
 ```
 
@@ -399,13 +488,13 @@ You can `set / get` whether there is a beep sound when the camera shoots.
 
 Set Beep Enabled
 
-```
+```Java
 InstaCameraManager.getInstance().setCameraBeepSwitch(boolean beep);
 ```
 
 Determine Whether beep is enabled
 
-```
+```Java
 boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 ```
 
@@ -418,7 +507,7 @@ boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 >
 > Before calibrate, please stand the camera upright on a stable and level surface.
 
-```
+```Java
 InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
                     @Override
                     public void onSuccessful() {
@@ -436,7 +525,7 @@ InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
 
 ### Format SD card
 
-```
+```Java
 InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
                     @Override
                     public void onSuccessful() {
@@ -458,31 +547,23 @@ InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
 
 The following methods are only used as parameters for other interfaces to call. Developers don't need to pay much attention to them, and they will be explained later at the places where they need to be called.
 
-Camera Type
+> InstaCameraManager.getInstance().xxx();
 
-```
-InstaCameraManager.getInstance().getCameraType();
-```
+|Method|Type|Explanation|
+|---|---|---|
+|getCameraType()|String|Camera Type|
+|getCameraVersion()|String|Camera Version|
+|getCameraSerial()|String|Camera Serial|
+|getMediaOffset()|String|Camera Media Offset|
+|isCameraSelfie()|boolean|Camera Selfie|
+|getCameraCurrentBatteryLevel()|int|Camera Battery Level, form 0 to 100|
+|isCameraCharging()|boolean|Camera Charge State|
+|getCameraStorageTotalSpace()|long|Camera Storage Total Space, bytes|
+|getCameraStorageFreeSpace()|long|Camera Storage Free Space, bytes|
+|isSdCardEnabled()|boolean|Camera SD card state|
+|getCameraHttpPrefix()|String|Camera Host|
+|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|String|Camera File List|
 
-Camera Media Offset
-
-```
-InstaCameraManager.getInstance().getMediaOffset();
-```
-
-Camera Host
-
-```
-InstaCameraManager.getInstance().getCameraHttpPrefix();
-```
-
-Camera File List
-
-```
-InstaCameraManager.getInstance().getAllUrlList();
-InstaCameraManager.getInstance().getRawUrlList();
-InstaCameraManager.getInstance().getCameraInfoMap();
-```
 
 
 ------
@@ -496,15 +577,16 @@ InstaCameraManager.getInstance().getCameraInfoMap();
 
 First add the maven address to your build file (`build.gradle` file in the project root directory)
 
-```
+```Groovy
 allprojects {
     repositories {
         ...
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
             credentials {
-                username = 'deployment'
-                password = 'test123'
+                // see sdk demo
+                username = '***'
+                password = '***'
             }
         }
     }
@@ -513,15 +595,15 @@ allprojects {
 
 Second import the dependent library in your `build.gradle` file of app directory
 
-```
+```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.0.4'
+    implementation 'com.arashivision.sdk:sdkmedia:1.1.8'
 }
 ```
 
 Then initialize SDK in Application
 
-```
+```Java
 public class MyApp extends Application {
 
     @Override
@@ -536,13 +618,13 @@ public class MyApp extends Application {
 
 
 
-## <a name="MediaSDK预览" />Preview
+## <a name="MediaSDK预览" />Preview & Live
 
 If you already import `CameraSDK`, you can open and display the preview content.
 
 Put `InstaCapturePlayerView` in your xml file
 
-```
+```xml
 <com.arashivision.sdkmedia.player.capture.InstaCapturePlayerView
     android:id="@+id/player_capture"
     android:layout_width="match_parent"
@@ -552,7 +634,7 @@ Put `InstaCapturePlayerView` in your xml file
 
 Bind lifecycle when your activity created
 
-```
+```Java
 @Override
 protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -563,7 +645,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 Display preview in `IPreviewStatusListener.onOpened ()` callback of `CameraSdk`
 
-```
+```Java
 @Override
 public void onOpened() {
     InstaCameraManager.getInstance().setStreamEncode();
@@ -590,14 +672,15 @@ public void onOpened() {
 private CaptureParamsBuilder createParams() {
     CaptureParamsBuilder builder = new CaptureParamsBuilder()
             .setCameraType(InstaCameraManager.getInstance().getCameraType())
-            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset());
+            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+            .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie());
     return builder;
 }
 ```
 
 Release `InstaCapturePlayerView` when preview is closed
 
-```
+```Java
 @Override
 protected void onStop() {
     super.onStop();
@@ -618,7 +701,7 @@ public void onIdle() {
 
 You can configure more options by `CaptureParamsBuilder`
 
-```
+```Java
 private CaptureParamsBuilder createParams() {
     CaptureParamsBuilder builder = new CaptureParamsBuilder()
     
@@ -627,12 +710,26 @@ private CaptureParamsBuilder createParams() {
             
             // (Must) The parameters are fixed
             .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+
+            // (Must) The parameters are fixed
+            .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
+            
+            // (Depends on) If you start preview for live, this is required.
+            .setLive(true)
             
             // (Depends on) If you use custom resloution to start preview, this is required.
             .setResolutionParams(mCurrentResolution.width, mCurrentResolution.height, mCurrentResolution.fps);
             
+            // (Optional) Whether to enable stabilization, the default is true
+            .setStabEnabled(true)
+            
             // (Optional) Whether to allow gesture operations, the default is true
-            .setGestureEnabled(true);
+            .setGestureEnabled(true)
+            
+            // (Optional) If you want to show preview stream on your custom surface
+            // (Note) Every time you open a new preview, you must create a new Surface and pass in parameters. You cannot reuse Surface
+            // (Note) Destroy your surface when priview is idle
+            .setCameraRenderSurfaceInfo(surface, surfaceWidth, surfaceHeight);
             
     if (You want to preview as plane mode) {
     
@@ -658,19 +755,19 @@ if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
 Switch to Normal Mode
 
-```
+```Java
 mCapturePlayerView.switchNormalMode();
 ```
 
 Switch to Fisheye Mode
 
-```
+```Java
 mCapturePlayerView.switchFisheyeMode();
 ```
 
 Switch to Perspective Mode
 
-```
+```Java
 mCapturePlayerView.switchPerspectiveMode();
 ```
 
@@ -680,22 +777,22 @@ or You can custom customize the player angle by yourself
 >
 > Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
 
-```
+```Java
 mCapturePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 if you want to switch between `Plane Mode` and others, you must restart preview first.
 
-```
+```Java
 if (current mode is Normal && new mode is Plane){
     InstaCameraManager.getInstance().closePreviewStream();
-    InstaCameraManager.getInstance().startPreviewStream();
+    InstaCameraManager.getInstance().startPreviewStream(resolution, previewType);
 }
 ```
 
 You can set `PlayerGestureListener` to observe gesture operation.
 
-```
+```Java
 mCapturePlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
@@ -751,9 +848,9 @@ You can scan media files from camera or a local directory to get `List<WorkWrapp
 
 Scan from camera 
 
-> Note: This is a time-consuming operation and needs to be processed in a child thread.
+> Note: This is a time-consuming operation and needs to be processed in a child thread. Not recommended for non-essential situations, you can get the file path and store it after shooting.
 
-```
+```Java
 List<WorkWrapper> list = WorkUtils.getAllCameraWorks(
     InstaCameraManager.getInstance().getCameraHttpPrefix(),
     InstaCameraManager.getInstance().getCameraInfoMap(),
@@ -765,34 +862,36 @@ Scan from local directory
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread.
 
-```
+```Java
 List<WorkWrapper> list = WorkUtils.getAllLocalWorks(String dirPath);
 ```
 
 or if you have urls of the media file, you can also create `WorkWrapper` by yourself.
 
-```
+```Java
 String[] urls = {img1.insv, img2.insv, img3.insv};
 WorkWrapper workWrapper = new WorkWrapper(urls);
 ```
 
-You can determine whether it is a video or an image based on the `workWrapper`
+You can get the media info based from the `workWrapper`
 
-```
-boolean isPhoto = workWrapper.isPhoto();
-boolean isVideo = workWrapper.isVideo();
-```
+|Method|Type|Explanation|
+|---|---|---|
+|getIdenticalKey()|String|Uniquely Identify, used for `DiskCacheKey of Glide` or others|
+|getUrls()|String[]|Get media file urls|
+|getWidth()|int|Get media width|
+|getHeight()|int|Get media height|
+|getBitrate()|int|Get video bitrate, return 0 if is photo|
+|getFps()|double|Get video fps, return 0 if is photo|
+|isPhoto()|boolean|Whether the media is photo|
+|isHDRPhoto()|boolean|Whether the media is hdr photo|
+|isVideo()|boolean|Whether the media is video|
+|isHDRVideo()|boolean|Whether the media is hdr video|
+|isCameraFile()|boolean|Whether the media file is from camera|
+|isLocalFile()|boolean|Whether the media is is from device|
+|getCreationTime()|long|Get media capture timestamp, in ms|
+|getGyroInfo()|GyroInfo[]|Get media gyro data|
 
-```
-boolean isHDRPhoto = workWrapper.isHDRPhoto();
-boolean isHDRVideo = workWrapper.isHDRVideo();
-```
-
-When you need a `Uniquely Identify` of `WorkWrapper`, such as DiskCacheKey of Glide. You can get it by
-
-```
-String id = workWrapper.getIdenticalKey();
-```
 
 ### Image Player
 
@@ -800,7 +899,7 @@ You can play an image by `InstaImagePlayerView`.
 
 Put `InstaImagePlayerView` in your xml file
 
-```
+```xml
 <com.arashivision.sdkmedia.player.image.InstaImagePlayerView
     android:id="@+id/player_image"
     android:layout_width="match_parent"
@@ -809,7 +908,7 @@ Put `InstaImagePlayerView` in your xml file
 
 Bind lifecycle when your activity created
 
-```
+```Java
 @Override
 protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -820,14 +919,14 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 Build parameters and play
 
-```
+```Java
 mImagePlayerView.prepare(workWrapper, new ImageParamsBuilder());
 mImagePlayerView.play();
 ```
 
 Release `InstaImagePlayerView` when activity is destory
 
-```
+```Java
 @Override
 protected void onDestroy() {
     super.onDestroy();
@@ -837,33 +936,36 @@ protected void onDestroy() {
 
 You can configure more options by `ImageParamsBuilder`
 
-```
+```Java
 ImageParamsBuilder builder = new ImageParamsBuilder()
 
       // (Optional) Whether to enable dynamic stitching, the default is true.
-      .setDynamicStitch(boolean dynamicStitch);
+      .setDynamicStitch(boolean dynamicStitch)
+      
+      // (Optional) Whether to enable stabilization, the default is true
+      .setStabEnabled(true)
       
       // (Optional) Set playback proxy file, such as HDR.jpg generated by stitching, the default is null
-      .setUrlForPlay(String url);
+      .setUrlForPlay(String url)
       
       // (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
       .setRenderModelType(int renderModeType)
       
       // (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
       // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
-      .setScreenRatio(int ratioX, int ratioY);
+      .setScreenRatio(int ratioX, int ratioY)
       
       // (Optional) Whether to allow gesture operations, the default is true
       .setGestureEnabled(boolean enabled);
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/work_thumbnail"
-      .setCacheWorkThumbnailRootPath(String path);
+      .setCacheWorkThumbnailRootPath(String path)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/stabilizer"
-      .setStabilizerCacheRootPath(String path);
+      .setStabilizerCacheRootPath(String path)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/cut_scene"
-      .setCacheCutSceneRootPath(String path);
+      .setCacheCutSceneRootPath(String path)
 ```
 
 if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
@@ -872,19 +974,19 @@ if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
 Switch to Normal Mode
 
-```
+```Java
 mImagePlayerView.switchNormalMode();
 ```
 
 Switch to Fisheye Mode
 
-```
+```Java
 mImagePlayerView.switchFisheyeMode();
 ```
 
 Switch to Perspective Mode
 
-```
+```Java
 mImagePlayerView.switchPerspectiveMode();
 ```
 
@@ -894,13 +996,13 @@ or You can custom customize the player angle by yourself
 >
 > Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
 
-```
+```Java
 mImagePlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 You can set `PlayerViewListener` to observe player status changed.
 
-```
+```Java
 mImagePlayerView.setPlayerViewListener(new PlayerViewListener() {
     @Override
     public void onLoadingStatusChanged(boolean isLoading) {
@@ -918,7 +1020,7 @@ mImagePlayerView.setPlayerViewListener(new PlayerViewListener() {
 
 You can set `PlayerGestureListener` to observe gesture operation.
 
-```
+```Java
 mImagePlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
@@ -971,7 +1073,7 @@ You can play a video by `InstaVideoPlayerView`.
 
 Put `InstaVideoPlayerView` in your xml file
 
-```
+```xml
 <com.arashivision.sdkmedia.player.video.InstaVideoPlayerView
     android:id="@+id/player_video"
     android:layout_width="match_parent"
@@ -980,7 +1082,7 @@ Put `InstaVideoPlayerView` in your xml file
 
 Bind lifecycle when your activity created
 
-```
+```Java
 @Override
 protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -991,14 +1093,14 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 Build parameters and play
 
-```
+```Java
 mVideoPlayerView.prepare(workWrapper, new VideoParamsBuilder());
 mVideoPlayerView.play();
 ```
 
 Release `InstaVideoPlayerView` when activity is destory
 
-```
+```Java
 @Override
 protected void onDestroy() {
     super.onDestroy();
@@ -1008,36 +1110,39 @@ protected void onDestroy() {
 
 You can configure more options by `VideoParamsBuilder`
 
-```
+```Java
 VideoParamsBuilder builder = new VideoParamsBuilder()
 
       // (Optional) Loading icon, default is none
-      .setLoadingImageResId(int resId);
+      .setLoadingImageResId(int resId)
       
       // (Optional) Background color when loading, default is black
-      .setLoadingBackgroundColor(int color);
+      .setLoadingBackgroundColor(int color)
       
       // (Optional) Whether to play automatically after preparation, the default is true
-      .setAutoPlayAfterPrepared(boolean autoPlayAfterPrepared);
+      .setAutoPlayAfterPrepared(boolean autoPlayAfterPrepared)
+      
+      // (Optional) Whether to enable stabilization, the default is true
+      .setStabEnabled(true)
       
       // (Optional) Whether to loop playback, the default is true
-      .setIsLooping(boolean isLooping);
+      .setIsLooping(boolean isLooping)
       
       // (Optional) Set Render Model Type, the default is `RENDER_MODE_AUTO`
       .setRenderModelType(int renderModeType)
       
       // (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
       // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
-      .setScreenRatio(int ratioX, int ratioY);
+      .setScreenRatio(int ratioX, int ratioY)
       
       // (Optional) Whether to allow gesture operations, the default is true
-      .setGestureEnabled(boolean enabled);
+      .setGestureEnabled(boolean enabled)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/work_thumbnail"
-      .setCacheWorkThumbnailRootPath(String path);
+      .setCacheWorkThumbnailRootPath(String path)
       
       // (Optional) Cache Folder, the default is getCacheDir() + "/cut_scene"
-      .setCacheCutSceneRootPath(String path);
+      .setCacheCutSceneRootPath(String path)
 ```
 
 if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
@@ -1046,19 +1151,19 @@ if you use `RENDER_MODE_AUTO`, you can switch between the following modes.
 
 Switch to Normal Mode
 
-```
+```Java
 mVideoPlayerView.switchNormalMode();
 ```
 
 Switch to Fisheye Mode
 
-```
+```Java
 mVideoPlayerView.switchFisheyeMode();
 ```
 
 Switch to Perspective Mode
 
-```
+```Java
 mVideoPlayerView.switchPerspectiveMode();
 ```
 
@@ -1068,13 +1173,13 @@ or You can custom customize the player angle by yourself
 >
 > Distance: Distance from observation point to observed point. Range 0(inclusive) ~ ∞
 
-```
+```Java
 mVideoPlayerView.setConstraint(float minFov, float maxFov, float defaultFov, float minDistance, float maxDistance, float defaultDistance);
 ```
 
 You can set `PlayerViewListener` to observe player status changed.
 
-```
+```Java
 mVideoPlayerView.setPlayerViewListener(new PlayerViewListener() {
     @Override
     public void onLoadingStatusChanged(boolean isLoading) {
@@ -1092,7 +1197,7 @@ mVideoPlayerView.setPlayerViewListener(new PlayerViewListener() {
 
 You can set `VideoStatusListener` to observe video status changed.
 
-```
+```Java
 mVideoPlayerView.setVideoStatusListener(new VideoStatusListener() {
     @Override
     public void onProgressChanged(long position, long length) {
@@ -1114,7 +1219,7 @@ mVideoPlayerView.setVideoStatusListener(new VideoStatusListener() {
 
 You can set `PlayerGestureListener` to observe gesture operation.
 
-```
+```Java
 mVideoPlayerView.setGestureListener(new PlayerGestureListener() {
     @Override
     public boolean onDown(MotionEvent e) {
@@ -1162,7 +1267,7 @@ mVideoPlayerView.setGestureListener(new PlayerGestureListener() {
 
 Other `VideoPlayerView` operates
 
-```
+```Java
 // Whether the video is playing
 isPlaying();
 
@@ -1197,88 +1302,96 @@ You can export `WorkWrapper` to an image or a video file.
 
 if you want to export an image, you need to know `ExportImageParamsBuilder` first.
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 
-    // (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
-    .setCameraType(String cameraType);
-
     // (Must) Set the export file path
-    .setTargetPath(String path);
+    .setTargetPath(String path)
 
-    // (Must) Set the width of the exported image.
-    .setWidth(int width);
+    // (Optional) Set the width of the exported image, the default is get from WorkWapper.
+    .setWidth(int width)
 
-    // (Must) Set the height of the exported image.
-    .setHeight(int height);
+    // (Optional) Set the height of the exported image, the default is get from WorkWapper.
+    .setHeight(int height)
 
     // (Optional) Set export mode, default is `PANORAMA`
     // ExportMode.PANORAMA: Use when exporting panorama media
     // ExportMode.SPHERE: Use when exporting flat thumbnails
-    .setExportMode(ExportUtils.ExportMode mode);
+    .setExportMode(ExportUtils.ExportMode mode)
 
     // (Optional) Whether to enable dynamic stitching, the default is true.
-    .setDynamicStitch(boolean dynamicStitch);
+    .setDynamicStitch(boolean dynamicStitch)
 
+    // (Optional) Whether to enable stabilization, the default is true
+    .setStabEnabled(true)
+    
+    // (Optional) Set such as HDR.jpg generated by stitching, the default is null
+    .setUrlForExport(String url)
+      
     // (Optional) Set the camera angle. It is recommended to use when exporting thumbnails. 
     // The currently displayed angle parameters can be obtained from `PlayerView.getXXX()`.
-    .setFov(float fov);
-    .setDistance(float distance);
-    .setYaw(float yaw);
-    .setPitch(float pitch);
+    .setFov(float fov)
+    .setDistance(float distance)
+    .setYaw(float yaw)
+    .setPitch(float pitch)
 
     // (Optional) Cache Folder, the default is getCacheDir() + "/work_thumbnail"
-    .setCacheWorkThumbnailRootPath(String path);
+    .setCacheWorkThumbnailRootPath(String path)
 
     // (Optional) Cache Folder, the default is getCacheDir() + "/stabilizer"
-    .setStabilizerCacheRootPath(String path);
+    .setStabilizerCacheRootPath(String path)
 
     // (Optional) Cache Folder, the default is getCacheDir() + "/cut_scene"
-    .setCacheCutSceneRootPath(String path);
+    .setCacheCutSceneRootPath(String path)
 ```
 
 if you want to export a video, you need to know `ExportVideoParamsBuilder` first. 
 
-```
+> Note: Exporting videos has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system during export, please set a smaller width and height.
+
+```Java
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
-    // (Must) Set Camera Type. Get from `InstaCameraManager.getInstance().getCameraType()`
-    .setCameraType(String cameraType);
 
     // (Must) Set the export file path
-    .setTargetPath(String path);
+    .setTargetPath(String path)
 
-    // (Must) Set the width of the exported video. It must be a power of 2.
-    .setWidth(int width);
+    // (Optional) Set the width of the exported video. It must be a power of 2, the default is get from WorkWapper.
+    .setWidth(int width)
 
-    // (Must) Set the height of the exported video. It must be a power of 2.
-    .setHeight(int height);
+    // (Optional) Set the height of the exported video. It must be a power of 2, the default is get from WorkWapper.
+    .setHeight(int height)
 
-    // (Must) Set the bitrate of the exported video.
-    .setBitrate(int bitrate);
+    // (Optional) Set the bitrate of the exported video, the default is get from WorkWapper.
+    .setBitrate(int bitrate)
+    
+    // (Optional) Set the fps of the exported video, the default is get from WorkWapper.
+    .setFps(int fps)
 
     // (Optional) Set export mode, default is `PANORAMA`
     // ExportMode.PANORAMA: Use when exporting panorama media
     // ExportMode.SPHERE: Used when exporting flat thumbnails
-    .setExportMode(ExportUtils.ExportMode mode);
+    .setExportMode(ExportUtils.ExportMode mode)
 
     // (Optional) Whether to enable dynamic stitching, the default is true.
-    .setDynamicStitch(boolean dynamicStitch);
-
+    .setDynamicStitch(boolean dynamicStitch)
+    
+    // (Optional) Whether to enable stabilization, the default is true
+    .setStabEnabled(true)
+    
     // (Optional) Cache Folder，the default is getCacheDir() + "/work_thumbnail"
-    .setCacheWorkThumbnailRootPath(String path);
+    .setCacheWorkThumbnailRootPath(String path)
 
     // (Optional) Cache Folder，the default is getCacheDir() + "/cut_scene"
-    .setCacheCutSceneRootPath(String path);
+    .setCacheCutSceneRootPath(String path)
 ```
 
 Next let's see how to export
 
 Export Panorama Image (Image to Image)
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(2048)
         .setHeight(1024);
@@ -1304,10 +1417,9 @@ int exportId = ExportUtils.exportImage(WorkWrapper, builder, new IExportCallback
 
 Export Image Thumbnail (Image to Image)
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.SPHERE)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(512)
         .setHeight(512)
@@ -1337,14 +1449,16 @@ int exportId = ExportUtils.exportImage(WorkWrapper, builder, new IExportCallback
 
 Export Panorama Video (Video to Video)
 
-```
+> Note: Exporting video has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system when exporting 5.7k, please set a smaller width and height or increase app priority.
+
+```Java
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(2048)
         .setHeight(1024)
-        .setBitrate(20 * 1024 * 1024);
+        .setBitrate(20 * 1024 * 1024)
+        .setFps(30);
 int exportId = ExportUtils.exportVideo(WorkWrapper, builder, new IExportCallback() {
             @Override
             public void onSuccess() {               
@@ -1367,10 +1481,9 @@ int exportId = ExportUtils.exportVideo(WorkWrapper, builder, new IExportCallback
 
 Export Video Thumbnail (Video to Image)
 
-```
+```Java
 ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.SPHERE)
-        .setCameraType(InstaCameraManager.getInstance().getCameraType())
         .setTargetPath(path)
         .setWidth(512)
         .setHeight(512)
@@ -1400,7 +1513,7 @@ int exportId = ExportUtils.exportVideoToImage(WorkWrapper, builder, new IExportC
 
 You can stop export by the `exportId` returned by `ExportUtils.exportXXX()`
 
-```
+```Java
 ExportUtils.stopExport(int exportId);
 ```
 
@@ -1412,19 +1525,29 @@ If you have a `WorkWrapper` of HDR Image, you can generate it to one image file 
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread.
 
-```
-boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String outputPath);
+> Note: Only local file could be generate, please download the files from camera first.
+
+```Java
+boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String hdrOutputPath);
 ```
 
-After the generateHDR call is successful, the outputPath can be played as a proxy.
+After the generateHDR call is successful, the outputPath can be played as a proxy or set as export url.
 
-```
+```Java
 ImageParamsBuilder builder = new ImageParamsBuilder()
         // If HDR stitching is successful then set it as the playback proxy
-        .setUrlForPlay(isSuccessful ? outputPath : null);
+        .setUrlForPlay(isSuccessful ? hdrOutputPath : null);
 mImagePlayerView.prepare(workWrapper, builder);
 mImagePlayerView.play();
 ```
+
+```Java
+ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
+        .setExportMode(ExportUtils.ExportMode.PANORAMA)
+        .setTargetPath(exportPath)
+        .setUrlForExport(hdrOutputPath);
+```
+
 
 
 # <a name="CameraSDKOSC" />OSC
@@ -1459,3 +1582,11 @@ Familiarity with [`Open Spherical Camera API`](https://developers.google.cn/stre
 
 * You can use [`/osc/info`](https://developers.google.cn/streetview/open-spherical-camera/guides/osc/info) to get the basic information about the camera and functionality it supports.
 * You can use [`/osc/state`](https://developers.google.cn/streetview/open-spherical-camera/guides/osc/state) to get the attributes of the camera.
+
+
+# <a name="Proguard" />Proguard
+
+```
+-keep class java.**{*;}
+-keep class com.arashivision.**{*;}
+```
