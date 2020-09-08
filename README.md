@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.1.8-green">
+    <img src="https://img.shields.io/badge/version-1.2.4-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
