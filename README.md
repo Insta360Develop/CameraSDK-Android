@@ -425,6 +425,8 @@ And the result is one of `CAPTURE_TYPE_NORMAL_CAPTURE`, `CAPTURE_TYPE_HDR_CAPTUR
 
 You can set `ICaptureStatusListener` to observe capture status changed.
 
+> Note: You need to call this method every time the camera is successfully connected, because the listener is bound to the camera instance.
+
 ```Java
 InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusListener() {
             @Override
