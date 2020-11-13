@@ -507,6 +507,8 @@ boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 >
 > You can use the `Firmware Upgrade` interface after downloading the file to the local.
 
+> Note: Please do not upload the wrong file to the camera to avoid bricking.\nExample: Do not upload OneX firmware upgrade package to OneX2 camera.
+
 Start Upgrading
 
 ```Java
@@ -524,7 +526,6 @@ FwUpgradeManager.getInstance().startUpgrade(fwFilePath, new FwUpgradeListener() 
                 // -1001: Please connect the camera first
                 // -1002: The upgrade will fail when the battery level of the camera is lower than 12%, 
                 //        please make sure that the battery level of the camera is sufficient
-                //
                 // -14004/400/500: Http Server Error
                 // -14005: Socket IO exception
                 // -14046: be cancelled, it will not be called back to this interface, but will be called back to onUpgradeCancel()
