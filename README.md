@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.2.4-green">
+    <img src="https://img.shields.io/badge/version-1.2.5-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -17,6 +17,7 @@
   - [Preview & Live](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
+  - [Firmware Upgrade](#CameraSDK固件升级)
   - [Other Function](#CameraSDK其他功能)
   - [Get other camera information](#CameraSDK获取相机其他信息)
 - [Media SDK Function](#MediaSDK功能)
@@ -54,7 +55,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.1.8'
+    implementation 'com.arashivision.sdk:sdkcamera:1.2.5'
 }
 ```
 
@@ -500,6 +501,59 @@ Determine Whether beep is enabled
 boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 ```
 
+## <a name="CameraSDK固件升级" />Firmware Upgrade
+
+> Obtain the firmware upgrade file from our person in charge and put it on your server or directly use the firmware link on our official website.
+>
+> You can use the `Firmware Upgrade` interface after downloading the file to the local.
+
+Start Upgrading
+
+```Java
+String fwFilePath = "/xxx/InstaOneXFW.bin";
+FwUpgradeManager.getInstance().startUpgrade(fwFilePath, new FwUpgradeListener() {
+            @Override
+            public void onUpgradeSuccess() {
+
+            }
+
+            @Override
+            public void onUpgradeFail(int errorCode, String message) {
+                // errorCode see FwUpgradeErrorCode.java
+                // -1000: Already in upgrading
+                // -1001: Please connect the camera first
+                // -1002: The upgrade will fail when the battery level of the camera is lower than 12%, 
+                //        please make sure that the battery level of the camera is sufficient
+                //
+                // -14004/400/500: Http Server Error
+                // -14005: Socket IO exception
+                // -14046: be cancelled, it will not be called back to this interface, but will be called back to onUpgradeCancel()
+            }
+
+            @Override
+            public void onUpgradeCancel() {
+
+            }
+
+            @Override
+            public void onUpgradeProgress(double progress) {
+                // progress: 0-1
+            }
+        });
+```
+
+Cancel Upgrade
+
+```Java
+FwUpgradeManager.getInstance().cancelUpgrade();
+```
+
+Determine whether it is being upgraded
+
+```Java
+FwUpgradeManager.getInstance().isUpgrading();
+```
+
 
 ## <a name="CameraSDK其他功能" />Other Function
 
@@ -511,41 +565,41 @@ boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 
 ```Java
 InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
-                    @Override
-                    public void onSuccessful() {
-                    }
+            @Override
+            public void onSuccessful() {
+            }
 
-                    @Override
-                    public void onFailed() {
-                    }
+            @Override
+            public void onFailed() {
+            }
 
-                    @Override
-                    public void onCameraConnectError() {
-                    }
-                });
+            @Override
+            public void onCameraConnectError() {
+            }
+        });
 ```
 
 ### Format SD card
 
 ```Java
 InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
-                    @Override
-                    public void onSuccessful() {
-                    }
+            @Override
+            public void onSuccessful() {
+            }
 
-                    @Override
-                    public void onFailed() {
-                    }
+            @Override
+            public void onFailed() {    
+            }
 
-                    @Override
-                    public void onCameraConnectError() {
-                    }
-                });
+            @Override
+            public void onCameraConnectError() {
+            }
+        });
 ```
 
 ### Delete Files from Camera
 
-> Note: Please do not pass in wrong path parameters, so we recommend that you get the legal urls from the WorkWrapper.
+> Note: Please do not pass in wrong path parameters, so we recommend that you get the valid urls from the WorkWrapper.
 
 ```Java
 List<String> fileUrls = Arrays.asList(workWrapper.getUrls());
@@ -620,7 +674,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.1.8'
+    implementation 'com.arashivision.sdk:sdkmedia:1.2.5'
 }
 ```
 
