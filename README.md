@@ -543,6 +543,27 @@ InstaCameraManager.getInstance().formatStorage(new ICameraOperateCallback() {
                 });
 ```
 
+### Delete Files from Camera
+
+> Note: Please do not pass in wrong path parameters, so we recommend that you get the legal urls from the WorkWrapper.
+
+```Java
+List<String> fileUrls = Arrays.asList(workWrapper.getUrls());
+InstaCameraManager.getInstance().deleteFileList(fileUrls, new ICameraOperateCallback() {
+                    @Override
+                    public void onSuccessful() {
+                    }
+
+                    @Override
+                    public void onFailed() {
+                    }
+
+                    @Override
+                    public void onCameraConnectError() {
+                    }
+                });
+```
+
 
 
 ## <a name="CameraSDK获取相机其他信息" />Get other camera information
