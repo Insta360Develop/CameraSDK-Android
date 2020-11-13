@@ -507,7 +507,7 @@ boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 >
 > You can use the `Firmware Upgrade` interface after downloading the file to the local.
 
-> Note: Please do not upload the wrong file to the camera to avoid bricking.\nExample: Do not upload OneX firmware upgrade package to OneX2 camera.
+> Note: Please do not upload the wrong file to the camera to avoid bricking. Example: Do not upload OneX firmware upgrade package to OneX2 camera.
 
 Start Upgrading
 
