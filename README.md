@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.3.0-green">
+    <img src="https://img.shields.io/badge/version-1.3.1-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -55,7 +55,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.3.0'
+    implementation 'com.arashivision.sdk:sdkcamera:1.3.1'
 }
 ```
 
@@ -675,7 +675,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.3.0'
+    implementation 'com.arashivision.sdk:sdkmedia:1.3.1'
 }
 ```
 
@@ -800,6 +800,13 @@ private CaptureParamsBuilder createParams() {
             
             // (Optional) Whether to enable stabilization, the default is true
             .setStabEnabled(true)
+            
+            // (Optional) if setStabEnabled(true), you can choose the type of stabilization type, the default is InstaStabType.STAB_TYPE_AUTO
+            // InstaStabType.STAB_TYPE_AUTO: Use the official default stabilization type for different cameras.
+            // InstaStabType.STAB_TYPE_PANORAMA: Panoramic stabilization, keep the screen still.
+            // InstaStabType.STAB_TYPE_CALIBRATE_HORIZON: Align the horizon only.
+            // InstaStabType.STAB_TYPE_FOOTAGE_MOTION_SMOOTH: Smooth footage motion, no horizon alignment.
+            .setStabType(InstaStabType.STAB_TYPE_AUTO)
             
             // (Optional) Whether to allow gesture operations, the default is true
             .setGestureEnabled(true)
