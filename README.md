@@ -26,6 +26,7 @@
   - [Player](#MediaSDK播放)
   - [Export](#MediaSDK导出)
   - [Generate HDR Image](#MediaSDK生成HDR图像)
+- [Error Code Comparison Table](https://github.com/Insta360Develop/CameraSDK-Android/blob/master/ErrorCode)
 - [OSC](#CameraSDKOSC)
 - [Proguard](#Proguard)
   
