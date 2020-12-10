@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.3.1-green">
+    <img src="https://img.shields.io/badge/version-1.3.2-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -56,7 +56,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.3.1'
+    implementation 'com.arashivision.sdk:sdkcamera:1.3.2'
 }
 ```
 
@@ -480,9 +480,9 @@ int wb = InstaCameraManager.getInstance().getWhiteBalance(InstaCameraManager.FUN
 ```
 
 > Please check the AAA parameters and range table of each camera.
-> [ONE X](https://www.insta360.com/cn/product/insta360-onex/)
-> [ONE R](https://onlinemanual.insta360.com/oner/en-us/camera/parameters)
-> [ONE X2](https://onlinemanual.insta360.com/onex2/en-us/camera/parameters)
+> [[ONE X](https://www.insta360.com/product/insta360-onex/)]
+> [[ONE R](https://onlinemanual.insta360.com/oner/en-us/camera/parameters)]
+> [[ONE X2](https://onlinemanual.insta360.com/onex2/en-us/camera/parameters)]
 
 
 ### Camera Beep
@@ -675,7 +675,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.3.1'
+    implementation 'com.arashivision.sdk:sdkmedia:1.3.2'
 }
 ```
 
