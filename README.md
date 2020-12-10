@@ -288,7 +288,7 @@ InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, Ins
 
 > Note: The preview stream is different between `Preview`, `Record` and `Live`, so you must restart preview stream if you want to switch between them.
 
-If you want to display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
+Display the live preview content, please see [Media SDK Function - Preview & Live](#MediaSDK预览)
 
 When the preview is ready, you can start live like this
 
@@ -466,24 +466,23 @@ InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusList
 
 ## <a name="CameraSDK属性设置" />Settings
 
-### EV Value
+### AAA Parameters
 
-You can `set / get` the EV value of a certain capture mode. The value range is -4 ~ 4
+You can `set / get` the AAA parameters to the camera. 
 
-> `funcMode` is one of `FUNCTION_MODE_CAPTURE_NORMAL`, `FUNCTION_MODE_HDR_CAPTURE`, `FUNCTION_MODE_INTERVAL_SHOOTING`, 
-`FUNCTION_MODE_RECORD_NORMAL`, `FUNCTION_MODE_HDR_RECORD`, `FUNCTION_MODE_BULLETTIME`, `FUNCTION_MODE_TIMELAPSE`
+> You need to specify a camera mode to set the parameters, see InstaCameraManager.FUNCTION_MODE_XXX.
 
-Set value
-
-```Java
-InstaCameraManager.getInstance().setExposureEV(int funcMode, float ev);
-```
-
-Get value 
+Eg. Set/Get WB value
 
 ```Java
-float ev = InstaCameraManager.getInstance().getExposureEV(int funcMode);
+InstaCameraManager.getInstance().setWhiteBalance(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL, InstaCameraManager.WHITE_BALANCE_2700K);
+int wb = InstaCameraManager.getInstance().getWhiteBalance(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL);
 ```
+
+> Please check the AAA parameters and range table of each camera.
+> [ONE X](https://www.insta360.com/cn/product/insta360-onex/)
+> [ONE R](https://onlinemanual.insta360.com/oner/en-us/camera/parameters)
+> [ONE X2](https://onlinemanual.insta360.com/onex2/en-us/camera/parameters)
 
 
 ### Camera Beep
@@ -805,8 +804,8 @@ private CaptureParamsBuilder createParams() {
             // (Optional) if setStabEnabled(true), you can choose the type of stabilization type, the default is InstaStabType.STAB_TYPE_AUTO
             // InstaStabType.STAB_TYPE_AUTO: Use the official default stabilization type for different cameras.
             // InstaStabType.STAB_TYPE_PANORAMA: Panoramic stabilization, keep the screen still.
-            // InstaStabType.STAB_TYPE_CALIBRATE_HORIZON: Align the horizon only.
-            // InstaStabType.STAB_TYPE_FOOTAGE_MOTION_SMOOTH: Smooth footage motion, no horizon alignment.
+            // InstaStabType.STAB_TYPE_CALIBRATE_HORIZON: Align the horizon only. (The roll axis does not move, the yaw pitch changes)
+            // InstaStabType.STAB_TYPE_FOOTAGE_MOTION_SMOOTH: Smooth footage motion, no horizon alignment. (yaw pitch roll changes with the camera)
             .setStabType(InstaStabType.STAB_TYPE_AUTO)
             
             // (Optional) Whether to allow gesture operations, the default is true
