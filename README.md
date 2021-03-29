@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.3.3-green">
+    <img src="https://img.shields.io/badge/version-1.3.6-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -56,7 +56,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.3.3'
+    implementation 'com.arashivision.sdk:sdkcamera:1.3.6'
 }
 ```
 
@@ -675,7 +675,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.3.3'
+    implementation 'com.arashivision.sdk:sdkmedia:1.3.6'
 }
 ```
 
@@ -1039,6 +1039,9 @@ ImageParamsBuilder builder = new ImageParamsBuilder()
       // (Optional) Set the aspect ratio of the screen, the default is full screen display (ie full canvas)
       // If the rendering mode type is `RENDER_MODE_PLANE_STITCH`, the recommended setting ratio is 2:1
       .setScreenRatio(int ratioX, int ratioY)
+      
+      // (Optional) Eliminate the chromatic aberration of image stitching, the default is false
+      .setImageFusion(boolean imageFusion)
       
       // (Optional) Whether to allow gesture operations, the default is true
       .setGestureEnabled(boolean enabled);
@@ -1406,6 +1409,9 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 
     // (Optional) Whether to enable dynamic stitching, the default is true.
     .setDynamicStitch(boolean dynamicStitch)
+    
+    // (Optional) Eliminate the chromatic aberration of image stitching, the default is false
+    .setImageFusion(boolean imageFusion)
 
     // (Optional) Whether to enable stabilization, the default is true
     .setStabEnabled(true)
@@ -1609,8 +1615,6 @@ ExportUtils.stopExport(int exportId);
 If you have a `WorkWrapper` of HDR Image, you can generate it to one image file by `HDR Stiching`.
 
 > Note: This is a time-consuming operation and needs to be processed in a child thread.
-
-> Note: Only local file could be generate, please download the files from camera first.
 
 ```Java
 boolean isSuccessful = StitchUtils.generateHDR(WorkWrapper workWrapper, String hdrOutputPath);
