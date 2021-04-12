@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.3.7-green">
+    <img src="https://img.shields.io/badge/version-1.3.9-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -56,7 +56,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.3.7'
+    implementation 'com.arashivision.sdk:sdkcamera:1.3.9'
 }
 ```
 
@@ -247,6 +247,26 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
     @Override
     public void onError() {
         // Preview Failed
+    }
+	
+	@Override
+    public void onExposureData(ExposureData exposureData) {
+        // exposureData.timestamp: The time since the camera was turned on
+		// exposureData.exposureTime: Rolling shutter exposure time
+    }
+
+    @Override
+    public void onGyroData(GyroData gyroData) {
+		// gyroData.timestamp: The time since the camera was turned on
+		// gyroData.ax, gyroData.ay, gyroData.az: Three-axis acceleration
+		// gyroData.gx, gyroData.gy, gyroData.gz: Three-axis gyroscope
+    }
+
+    @Override
+    public void onVideoData(VideoData videoData) {
+		// videoData.timestamp: The time since the camera was turned on
+		// videoData.data: Preview raw stream data every frame
+		// videoData.size: videoData.data.length
     }
 
 }
@@ -675,7 +695,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.3.7'
+    implementation 'com.arashivision.sdk:sdkmedia:1.3.9'
 }
 ```
 
