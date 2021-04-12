@@ -251,25 +251,25 @@ public class PreviewActivity extends BaseObserveCameraActivity implements IPrevi
 	
 	@Override
     public void onExposureData(ExposureData exposureData) {
-		// Callback frequency 500Hz
+	// Callback frequency 500Hz
         // exposureData.timestamp: The time since the camera was turned on
-		// exposureData.exposureTime: Rolling shutter exposure time
+	// exposureData.exposureTime: Rolling shutter exposure time
     }
 
     @Override
     public void onGyroData(List<GyroData> gyroList) {
-		// Callback frequency 10Hz, 50 data per group
-		// gyroData.timestamp: The time since the camera was turned on
-		// gyroData.ax, gyroData.ay, gyroData.az: Three-axis acceleration
-		// gyroData.gx, gyroData.gy, gyroData.gz: Three-axis gyroscope
+	// Callback frequency 10Hz, 50 data per group
+	// gyroData.timestamp: The time since the camera was turned on
+	// gyroData.ax, gyroData.ay, gyroData.az: Three-axis acceleration
+	// gyroData.gx, gyroData.gy, gyroData.gz: Three-axis gyroscope
     }
 
     @Override
     public void onVideoData(VideoData videoData) {
-		// Callback frequency 500Hz
-		// videoData.timestamp: The time since the camera was turned on
-		// videoData.data: Preview raw stream data every frame
-		// videoData.size: videoData.data.length
+	// Callback frequency 500Hz
+	// videoData.timestamp: The time since the camera was turned on
+	// videoData.data: Preview raw stream data every frame
+	// videoData.size: videoData.data.length
     }
 
 }
