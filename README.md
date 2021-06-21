@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.3.10-green">
+    <img src="https://img.shields.io/badge/version-1.3.11-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -56,7 +56,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.3.10'
+    implementation 'com.arashivision.sdk:sdkcamera:1.3.11'
 }
 ```
 
@@ -698,7 +698,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.3.10'
+    implementation 'com.arashivision.sdk:sdkmedia:1.3.11'
 }
 ```
 
@@ -998,7 +998,9 @@ You can get the media info based from the `workWrapper`
 |isCameraFile()|boolean|Whether the media file is from camera|
 |isLocalFile()|boolean|Whether the media is is from device|
 |getCreationTime()|long|Get media capture timestamp, in ms|
+|getFirstFrameTimeOffset()|long|Get the offset of the timestamp relative to the camera startup when the media file was taken, used to match Gyro, Exposure and other data, in ms|
 |getGyroInfo()|GyroInfo[]|Get media gyro data|
+|getExposureData()|ExposureData[]|Get media exposure data|
 
 
 ### Image Player
