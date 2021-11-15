@@ -42,7 +42,6 @@ allprojects {
         ...
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
-	    allowInsecureProtocol true
             credentials {
                 // see sdk demo
                 username = '***'
