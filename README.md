@@ -20,6 +20,7 @@
   - [Firmware Upgrade](#CameraSDK固件升级)
   - [Other Function](#CameraSDK其他功能)
   - [Get other camera information](#CameraSDK获取相机其他信息)
+  - [OneX2 Switch Camera Lens](#CameraSDK切换相机镜头)
 - [Media SDK Function](#MediaSDK功能)
   - [Initialization](#MediaSDK初始化)
   - [Preview & Live](#MediaSDK预览)
@@ -664,6 +665,34 @@ The following methods are only used as parameters for other interfaces to call. 
 |isSdCardEnabled()|boolean|Camera SD card state|
 |getCameraHttpPrefix()|String|Camera Host|
 |getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|String|Camera File List|
+
+
+
+## <a name="CameraSDK切换相机镜头" />OneX2 Switch Camera Lens
+
+```java
+/**
+*	CameraMode: lens mode
+*	CAMERA_MODE_SINGLE_FRONT -> Single Lens Mode - Front Lens
+*	CAMERA_MODE_SINGLE_REAR -> Single Lens Mode - Rear Lens
+*	CAMERA_MODE_PANORAMA -> Panoramic Lens Mode
+*/
+
+/**
+*	FocusSensor：focus mode
+*	FOCUS_SENSOR_FRONT -> The front lens is the main focus
+*	FOCUS_SENSOR_REAR -> The rear lens is the main focus
+*	FOCUS_SENSOR_ALL -> Both lenses are the main focus
+*/
+InstaCameraManager.getInstance().switchCameraMode(InstaCameraManager.CAMERA_MODE_xxx, InstaCameraManager.FOCUS_SENSOR_xxx, callback);
+
+// Get current camera lens state
+InstaCameraManager.getInstance().getCurrentCameraMode();
+InstaCameraManager.getInstance().getCurrentFocusSensor();
+```
+
+> Note: When CameraMode is `Single Lens Mode`, FocusSensor should correspond to CameraMode `Front/Rear`.
+>        When CameraMode is `Panorama Lens Mode`, if FocusSensor is `All`, it is a normal panorama, and FocusSensor is `Front/Rear`, which should be used in Insta Pano photo mode.
 
 
 
