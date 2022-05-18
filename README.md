@@ -7,7 +7,13 @@
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/targetSdkVersion-28-green">
 </a> 
+<a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
+    <img src="https://img.shields.io/badge/abi-arm64--v8a-orange">
+</a> 
 
+
+## Note: 
+32-bit library (armeabi-v7a) is no longer maintained, please use 64-bit library (arm64-v8a) to build!
 
 
 # Table of Contents
