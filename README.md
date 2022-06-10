@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.3.23-green">
+    <img src="https://img.shields.io/badge/version-1.4.0-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -63,7 +63,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.3.23'
+    implementation 'com.arashivision.sdk:sdkcamera:1.4.0'
 }
 ```
 
@@ -733,7 +733,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.3.23'
+    implementation 'com.arashivision.sdk:sdkmedia:1.4.0'
 }
 ```
 
@@ -849,6 +849,12 @@ private CaptureParamsBuilder createParams() {
 
             // (Must) The parameters are fixed
             .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
+	    
+	    // (Must) The parameters are fixed
+	    .setGyroTimeStamp(InstaCameraManager.getInstance().getGyroTimeStamp())
+	    
+	    // (Must) The parameters are fixed
+            .setBatteryType(InstaCameraManager.getInstance().getBatteryType())
             
             // (Depends on) If you start preview for live, this is required.
             .setLive(true)
