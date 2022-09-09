@@ -675,8 +675,8 @@ The following methods are only used as parameters for other interfaces to call. 
 |getCameraStorageFreeSpace()|long|Camera Storage Free Space, bytes|
 |isSdCardEnabled()|boolean|Camera SD card state|
 |getCameraHttpPrefix()|String|Camera Host|
-|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|List<String>|Camera File List (Exclued Recording File)|
-|getAllUrlListIncludeRecording()|List<String>|Camera File List (Include Recording File)|
+|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|List\<String\>|Camera File List (Exclued Recording File)|
+|getAllUrlListIncludeRecording()|List\<String\>|Camera File List (Include Recording File)|
 
 
 
