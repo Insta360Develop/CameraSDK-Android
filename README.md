@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.4.0-green">
+    <img src="https://img.shields.io/badge/version-1.5.0-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -33,6 +33,7 @@
   - [Player](#MediaSDK播放)
   - [Export](#MediaSDK导出)
   - [Generate HDR Image](#MediaSDK生成HDR图像)
+  - [Generate PureShot Image](#MediaSDK生成HDR图像)
 - [Error Code Comparison Table](https://github.com/Insta360Develop/CameraSDK-Android/blob/master/ErrorCode.md)
 - [OSC](#CameraSDKOSC)
 - [Proguard](#Proguard)
@@ -63,7 +64,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.4.0'
+    implementation 'com.arashivision.sdk:sdkcamera:1.5.0'
 }
 ```
 
@@ -663,14 +664,19 @@ The following methods are only used as parameters for other interfaces to call. 
 |getCameraVersion()|String|Camera Version|
 |getCameraSerial()|String|Camera Serial|
 |getMediaOffset()|String|Camera Media Offset|
+|getMediaOffsetV2()|String|Camera Media Offset V2|
+|getMediaOffsetV3()|String|Camera Media Offset V3|
 |isCameraSelfie()|boolean|Camera Selfie|
+|getGyroTimeStamp()|double|Only use for preview|
+|getBatteryType()|int|Only use for preview|
 |getCameraCurrentBatteryLevel()|int|Camera Battery Level, form 0 to 100|
 |isCameraCharging()|boolean|Camera Charge State|
 |getCameraStorageTotalSpace()|long|Camera Storage Total Space, bytes|
 |getCameraStorageFreeSpace()|long|Camera Storage Free Space, bytes|
 |isSdCardEnabled()|boolean|Camera SD card state|
 |getCameraHttpPrefix()|String|Camera Host|
-|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|String|Camera File List|
+|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|String|Camera File List (Exclued Recording File)|
+|getAllUrlListIncludeRecording()|String|Camera File List (Include Recording File)|
 
 
 
@@ -733,7 +739,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.4.0'
+    implementation 'com.arashivision.sdk:sdkmedia:1.5.0'
 }
 ```
 
@@ -808,8 +814,12 @@ public void onOpened() {
 private CaptureParamsBuilder createParams() {
     CaptureParamsBuilder builder = new CaptureParamsBuilder()
             .setCameraType(InstaCameraManager.getInstance().getCameraType())
-            .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
-            .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie());
+			.setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+			.setMediaOffsetV2(InstaCameraManager.getInstance().getMediaOffsetV2())
+			.setMediaOffsetV3(InstaCameraManager.getInstance().getMediaOffsetV3())
+			.setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
+			.setGyroTimeStamp(InstaCameraManager.getInstance().getGyroTimeStamp())
+			.setBatteryType(InstaCameraManager.getInstance().getBatteryType());
     return builder;
 }
 ```
@@ -846,15 +856,21 @@ private CaptureParamsBuilder createParams() {
             
             // (Must) The parameters are fixed
             .setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
+			
+			// (Must) The parameters are fixed
+			.setMediaOffsetV2(InstaCameraManager.getInstance().getMediaOffsetV2())
+			
+			// (Must) The parameters are fixed
+			.setMediaOffsetV3(InstaCameraManager.getInstance().getMediaOffsetV3())
 
             // (Must) The parameters are fixed
             .setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
-	    
-	    // (Must) The parameters are fixed
-	    .setGyroTimeStamp(InstaCameraManager.getInstance().getGyroTimeStamp())
-	    
-	    // (Must) The parameters are fixed
-            .setBatteryType(InstaCameraManager.getInstance().getBatteryType())
+			
+			// (Must) The parameters are fixed
+			.setGyroTimeStamp(InstaCameraManager.getInstance().getGyroTimeStamp())
+			
+			// (Must) The parameters are fixed
+			.setBatteryType(InstaCameraManager.getInstance().getBatteryType())
             
             // (Depends on) If you start preview for live, this is required.
             .setLive(true)
@@ -1034,6 +1050,7 @@ You can get the media info based from the `workWrapper`
 |getFps()|double|Get video fps, return 0 if is photo|
 |isPhoto()|boolean|Whether the media is photo|
 |isHDRPhoto()|boolean|Whether the media is hdr photo|
+|supportPureShot()|boolean|Whether the media support PureShot algo|
 |isVideo()|boolean|Whether the media is video|
 |isHDRVideo()|boolean|Whether the media is hdr video|
 |isCameraFile()|boolean|Whether the media file is from camera|
@@ -1701,6 +1718,37 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
         .setExportMode(ExportUtils.ExportMode.PANORAMA)
         .setTargetPath(exportPath)
         .setUrlForExport(hdrOutputPath);
+```
+
+
+
+## <a name="MediaSDK生成PureShot图像" />Generate PureShot Image
+
+If you have a `WorkWrapper` of PureShot Image, you can generate it to one image file by `PureShot Stiching`.
+
+> Note: This is a time-consuming operation and needs to be processed in a child thread.
+
+```Java
+boolean isSuccessful = StitchUtils.generatePureShot(WorkWrapper workWrapper, String pureshotOutputPath, String algoFolderPath);
+```
+
+> Note: `algoFolderPath` can be either `LocalStoragePath` or `AssetsRelativePath`. Please ask our technical support staff for the algorithm model file corresponding to the sdk version.
+
+After the generatePureShot call is successful, the outputPath can be played as a proxy or set as export url.
+
+```Java
+ImageParamsBuilder builder = new ImageParamsBuilder()
+        // If PureShot stitching is successful then set it as the playback proxy
+        .setUrlForPlay(isSuccessful ? pureshotOutputPath : null);
+mImagePlayerView.prepare(workWrapper, builder);
+mImagePlayerView.play();
+```
+
+```Java
+ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
+        .setExportMode(ExportUtils.ExportMode.PANORAMA)
+        .setTargetPath(exportPath)
+        .setUrlForExport(pureshotOutputPath);
 ```
 
 
