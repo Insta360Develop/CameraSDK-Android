@@ -675,8 +675,8 @@ The following methods are only used as parameters for other interfaces to call. 
 |getCameraStorageFreeSpace()|long|Camera Storage Free Space, bytes|
 |isSdCardEnabled()|boolean|Camera SD card state|
 |getCameraHttpPrefix()|String|Camera Host|
-|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|String|Camera File List (Exclued Recording File)|
-|getAllUrlListIncludeRecording()|String|Camera File List (Include Recording File)|
+|getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|List<String>|Camera File List (Exclued Recording File)|
+|getAllUrlListIncludeRecording()|List<String>|Camera File List (Include Recording File)|
 
 
 
@@ -1044,6 +1044,7 @@ You can get the media info based from the `workWrapper`
 |---|---|---|
 |getIdenticalKey()|String|Uniquely Identify, used for `DiskCacheKey of Glide` or others|
 |getUrls()|String[]|Get media file urls|
+|getUrls(boolean)|String[]|Get media file urls. Set true/false to decide whether to include the dng file path|
 |getWidth()|int|Get media width|
 |getHeight()|int|Get media height|
 |getBitrate()|int|Get video bitrate, return 0 if is photo|
