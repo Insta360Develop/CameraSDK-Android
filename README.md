@@ -1,5 +1,5 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.5.0-green">
+    <img src="https://img.shields.io/badge/version-1.5.3-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/minSdkVersion-21-green">
@@ -64,7 +64,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.5.0'
+    implementation 'com.arashivision.sdk:sdkcamera:1.5.3'
 }
 ```
 
@@ -739,7 +739,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.5.0'
+    implementation 'com.arashivision.sdk:sdkmedia:1.5.3'
 }
 ```
 
