@@ -311,6 +311,7 @@ You need to get supported resolution of the camrea for live by
 List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
 
+//X4 no need to choose resolution, the parameter is default in firmware
 Then choose one resolution to start live preview
 
 ```Java
@@ -373,6 +374,7 @@ InstaCameraManager.getInstance().stopLive();
 
 ## <a name="CameraSDK拍摄" />Capture
 
+//For X4 you should switch the capture mode first before capture, InstaCameraManager.setFunctionModeToCamera(@FunctionMode int funcMode).
 After the camera is successfully connected, you can control its capture. We provide you with several capture interfaces.
 
 ### Normal Capture
@@ -609,6 +611,60 @@ InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
             public void onCameraConnectError() {
             }
         });
+```
+### Set GPS Data
+> Add GPS data to recording videos
+
+```Java
+    InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusListener() {
+
+        @Override
+        public void onCaptureWorking() {
+            startSendGpsData();
+        }
+
+        @Override
+        public void onCaptureFinish(String[] filePaths) {
+            stopCameraWork();
+        }
+    });
+
+    private void startSendGpsData() {
+        mCollectGpsDataList.clear();
+        mMainHandler.post(mCollectGpsDataRunnable);
+    }
+
+    private void stopSendGpsData() {
+        if (!mCollectGpsDataList.isEmpty()) {
+            InstaCameraManager.getInstance().setGpsData(GpsData.GpsData2ByteArray(mCollectGpsDataList));
+            mCollectGpsDataList.clear();
+        }
+        mMainHandler.removeCallbacks(mCollectGpsDataRunnable);
+    }
+
+    private List<GpsData> mCollectGpsDataList = new ArrayList<GpsData>();
+    private Runnable mCollectGpsDataRunnable = new Runnable(){
+        @Override
+        public void run() {
+            Location location = LocationManager.getInstance().getCurrentLocation();
+            if (location != null) {
+                GpsData gpsData = new GpsData();
+                gpsData.setLatitude(location.getLatitude());
+                gpsData.setLongitude(location.getLongitude());
+                gpsData.setGroundSpeed(location.getSpeed());
+                gpsData.setGroundCrouse(location.getBearing());
+                gpsData.setGeoidUndulation(location.getAltitude());
+                gpsData.setUTCTimeMs(location.getTime());
+                gpsData.setVaild(true);
+                mCollectGpsDataList.add(gpsData);
+                if (mCollectGpsDataList.size() >= 20) {
+                    InstaCameraManager.getInstance().setGpsData(GpsData.GpsData2ByteArray(mCollectGpsDataList));
+                    mCollectGpsDataList.clear();
+                }
+            }
+            mMainHandler.postDelayed(this, 100);
+        }
+    };
 ```
 
 ### Format SD card
