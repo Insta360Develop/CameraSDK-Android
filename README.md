@@ -93,6 +93,12 @@ You can connect the camera by WIFI or USB.
 
 > Note: You must do this on the main thread.
 
+By Ble
+
+```java
+InstaCameraManager.getInstance().connectBle(bleDevice);
+```
+
 By WIFI
 
 ```Java
@@ -733,7 +739,7 @@ The following methods are only used as parameters for other interfaces to call. 
 |getCameraHttpPrefix()|String|Camera Host|
 |getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|List\<String\>|Camera File List (Exclued Recording File)|
 |getAllUrlListIncludeRecording()|List\<String\>|Camera File List (Include Recording File)|
-
+|getWifiInfo()|WifiInfo|WifiInfo(ssid: String, pwd: String, macAddress: String, channel: int, mode: int, state: int, pwdVersion: int)|
 
 
 ## <a name="CameraSDK切换相机镜头" />OneX2 Switch Camera Lens
