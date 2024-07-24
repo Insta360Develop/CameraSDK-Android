@@ -740,6 +740,7 @@ The following methods are only used as parameters for other interfaces to call. 
 |getAllUrlList()<br>getRawUrlList()<br>getCameraInfoMap()|List\<String\>|Camera File List (Exclued Recording File)|
 |getAllUrlListIncludeRecording()|List\<String\>|Camera File List (Include Recording File)|
 |getWifiInfo()|WifiInfo|WifiInfo(ssid: String, pwd: String, macAddress: String, channel: int, mode: int, state: int, pwdVersion: int)|
+|setInternalSplicingEnable(boolean enable)|void|Enable device stitching only support on x4.|
 
 
 ## <a name="CameraSDK切换相机镜头" />OneX2 Switch Camera Lens
