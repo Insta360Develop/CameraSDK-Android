@@ -19,7 +19,7 @@
 # Table of Contents
 - [Camera SDK Function](#CameraSDK功能)
   - [Initialization](#CameraSDK初始化)
-  - [Connect / Disconnect / Obersve Camera](#CameraSDK连接/断开/监听相机)
+  - [Connect / Disconnect / Observe Camera](#CameraSDK连接/断开/监听相机)
   - [Preview & Live](#CameraSDK预览)
   - [Capture](#CameraSDK拍摄)
   - [Settings](#CameraSDK属性设置)
@@ -85,7 +85,7 @@ public class MyApp extends Application {
 
 
 
-## <a name="CameraSDK连接/断开/监听相机" />Connect / Disconnect / Obersve Camera
+## <a name="CameraSDK连接/断开/监听相机" />Connect / Disconnect / Observe Camera
 
 ### Connect
 
@@ -135,7 +135,7 @@ When you want to disconnect the camera, you can call
 InstaCameraManager.getInstance().closeCamera();
 ```
 
-### Obersve
+### Observe
 
 You can `register / unregister` `ICameraChangedCallback` on multiple pages to observe camera status changed
 
@@ -1585,7 +1585,7 @@ ExportImageParamsBuilder builder = new ExportImageParamsBuilder()
 
 if you want to export a video, you need to know `ExportVideoParamsBuilder` first. 
 
-> Note: Exporting videos has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system during export, please set a smaller width and height.
+> Note: Exporting videos demands high performance from your mobile device. If you encounter OOM or if the app is forcibly closed by the system during export, please try setting a smaller width and height.
 
 ```Java
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
@@ -1687,7 +1687,7 @@ int exportId = ExportUtils.exportImage(WorkWrapper, builder, new IExportCallback
 
 Export Panorama Video (Video to Video)
 
-> Note: Exporting video has high requirements on mobile phone performance. If you encounter oom or app being forcibly killed by the system when exporting 5.7k, please set a smaller width and height or increase app priority.
+> Note: Exporting videos demands high performance from your mobile device. If you encounter OOM or if the app is forcibly closed by the system when exporting 5.7k videos, please try setting a smaller width and height or increase app priority.
 
 ```Java
 ExportVideoParamsBuilder builder = new ExportVideoParamsBuilder()
