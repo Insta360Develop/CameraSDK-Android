@@ -119,7 +119,7 @@ int type = InstaCameraManager.getInstance().getCameraConnectedType();
 
 And the result is one of `CONNECT_TYPE_NONE`, `CONNECT_TYPE_USB`, `CONNECT_TYPE_WIFI`.
 
-For example if you want to determine if the camera is connected, you can do like this
+For example, to check if the camera is connected, you can do the following:
 
 ```Java
 private boolean isCameraConnected() {
