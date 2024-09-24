@@ -42,7 +42,7 @@
 
 ## <a name="CameraSDK初始化" />Initialization
 
-First add the maven address to your build file (`build.gradle` file in the project root directory)
+First, add the maven address to your build file (the `build.gradle` file in the project root directory)
 
 ```Groovy
 allprojects {
@@ -137,7 +137,7 @@ InstaCameraManager.getInstance().closeCamera();
 
 ### Observe
 
-You can `register / unregister` `ICameraChangedCallback` on multiple pages to observe camera status changed
+You can `register / unregister` `ICameraChangedCallback` on multiple pages to to monitor changes in camera status.
 
 ```Java
 public abstract class BaseObserveCameraActivity extends AppCompatActivity implements ICameraChangedCallback {
@@ -999,7 +999,7 @@ Switch to Perspective Mode
 mCapturePlayerView.switchPerspectiveMode();
 ```
 
-or You can custom customize the player angle by yourself
+You can customize the player angle according to your preferences.
 
 > Fov: Viewing width. Range 0(inclusive) ~ 180(exclusive)
 >
@@ -1138,7 +1138,7 @@ Put `InstaImagePlayerView` in your xml file
     android:layout_height="match_parent" />
 ```
 
-Bind lifecycle when your activity created
+Bind the lifecycle when your activity is created.
 
 ```Java
 @Override
@@ -1156,7 +1156,7 @@ mImagePlayerView.prepare(workWrapper, new ImageParamsBuilder());
 mImagePlayerView.play();
 ```
 
-Release `InstaImagePlayerView` when activity is destory
+Release the `InstaImagePlayerView` when the activity is destroyed.
 
 ```Java
 @Override
