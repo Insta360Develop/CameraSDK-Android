@@ -1225,7 +1225,7 @@ Switch to Perspective Mode
 mImagePlayerView.switchPerspectiveMode();
 ```
 
-or You can custom customize the player angle by yourself
+You can customize the player angle according to your preferences.
 
 > Fov: Viewing width. Range 0(inclusive) ~ 180(exclusive)
 >
@@ -1402,7 +1402,7 @@ Switch to Perspective Mode
 mVideoPlayerView.switchPerspectiveMode();
 ```
 
-or You can custom customize the player angle by yourself
+You can customize the player angle according to your preferences.
 
 > Fov: Viewing width. Range 0(inclusive) ~ 180(exclusive)
 >
