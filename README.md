@@ -317,8 +317,7 @@ You need to get supported resolution of the camrea for live by
 List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(InstaCameraManager.PREVIEW_TYPE_LIVE);
 ```
 
-//X4 no need to choose resolution, the parameter is default in firmware
-Then choose one resolution to start live preview
+For the X4, the preview stream resolution cannot be adjusted and is set to 832x1664 by default. For other models, the preview stream resolution must be set before starting live preview.
 
 ```Java
 InstaCameraManager.getInstance().startPreviewStream(PreviewStreamResolution, InstaCameraManager.PREVIEW_TYPE_LIVE);
