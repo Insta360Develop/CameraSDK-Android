@@ -525,6 +525,28 @@ int wb = InstaCameraManager.getInstance().getWhiteBalance(InstaCameraManager.FUN
 > [[ONE R](https://onlinemanual.insta360.com/oner/en-us/camera/parameters)]
 > [[ONE X2](https://onlinemanual.insta360.com/onex2/en-us/camera/parameters)]
 
+### CaptureSetting
+
+- **Set/GetResolutionToCamera**
+
+   Set/Get the resolution of the specified camera mode
+
+  > @params FunctionMode 
+  >
+  > ​	see InstaCameraManager.FUNCTION_MODE_XXX
+  >
+  > @params PreviewStreamResolution 
+  >
+  >  	You can choose one of the resolutions supported by the camera to set arguments. Get the supported resolutions by CaptureSettingSupportConfig#getSupportedResolution
+
+  ```java
+   InstaCameraManager#setResolutionToCamera(FunctionMode, PreviewStreamResolution)
+  ```
+
+  ```java
+  InstaCameraManager#getResolutionFromCamera(FunctionMode)
+  ```
+
 
 ### Camera Beep
 
