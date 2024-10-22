@@ -15,6 +15,9 @@
 ## Note: 
 32-bit library (armeabi-v7a) is no longer maintained, please use 64-bit library (arm64-v8a) to build!
 
+## How to get?
+Please visit [https://www.insta360.com/sdk/apply](https://www.insta360.com/sdk/apply) to apply for the latest SDK.
+
 
 # Table of Contents
 - [Camera SDK Function](#CameraSDK功能)
