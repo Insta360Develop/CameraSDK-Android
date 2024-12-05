@@ -92,7 +92,7 @@ public class MyApp extends Application {
 
 ### Connect
 
-You can connect the camera by WIFI or USB.
+You can connect the camera by bluetooth, Wi-Fi or USB.
 
 > Note: You must do this on the main thread.
 
