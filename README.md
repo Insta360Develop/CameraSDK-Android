@@ -96,13 +96,13 @@ You can connect the camera by WIFI or USB.
 
 > Note: You must do this on the main thread.
 
-By Ble
+By BLE
 
 ```java
 InstaCameraManager.getInstance().connectBle(bleDevice);
 ```
 
-By WIFI
+By Wi-Fi
 
 ```Java
 InstaCameraManager.getInstance().openCamera(InstaCameraManager.CONNECT_TYPE_WIFI);
