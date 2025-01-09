@@ -140,7 +140,7 @@ InstaCameraManager.getInstance().closeCamera();
 
 ### Observe
 
-You can `register / unregister` `ICameraChangedCallback` on multiple pages to to monitor changes in camera status.
+You can `register / unregister` `ICameraChangedCallback` on multiple pages to monitor changes in camera status.
 
 ```Java
 public abstract class BaseObserveCameraActivity extends AppCompatActivity implements ICameraChangedCallback {
