@@ -626,9 +626,8 @@ FwUpgradeManager.getInstance().isUpgrading();
 
 ### Calibrate Gyro
 
-> This function must be used when the camera is connected to WIFI
->
-> Before calibrate, please stand the camera upright on a stable and level surface.
+> This function should be used when the camera is connected to Wi-Fi.
+> Before calibrating, ensure the camera is placed upright on a stable and level surface.
 
 ```Java
 InstaCameraManager.getInstance().calibrateGyro(new ICameraOperateCallback() {
