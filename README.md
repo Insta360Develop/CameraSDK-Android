@@ -314,7 +314,7 @@ There are 3 kinds of `PreviewType` in `InstaCameraManager`. You must restart pre
 
 ### Live
 
-You need to get supported resolution of the camrea for live by
+You need to get supported resolution of the camera for live by
 
 ```Java
 List<PreviewStreamResolution> supportedList = InstaCameraManager.getInstance().getSupportedPreviewStreamResolution(InstaCameraManager.PREVIEW_TYPE_LIVE);
@@ -509,7 +509,7 @@ InstaCameraManager.getInstance().setCaptureStatusListener(new ICaptureStatusList
 
 ### AAA Parameters
 
-You can `set / get` the AAA parameters to the camera. 
+You can `set / get` the AAA parameters of the camera. 
 
 > You need to specify a camera mode to set the parameters, see InstaCameraManager.FUNCTION_MODE_XXX.
 
@@ -522,8 +522,10 @@ int wb = InstaCameraManager.getInstance().getWhiteBalance(InstaCameraManager.FUN
 
 > Please check the AAA parameters and range table of each camera.
 > [[ONE X](https://www.insta360.com/product/insta360-onex/)]
-> [[ONE R](https://onlinemanual.insta360.com/oner/en-us/camera/parameters)]
-> [[ONE X2](https://onlinemanual.insta360.com/onex2/en-us/camera/parameters)]
+> [[ONE R](https://onlinemanual.insta360.com/oner/camera/parameters)]
+> [[ONE X2](https://onlinemanual.insta360.com/onex2/camera/parameters)]
+> [[X3](https://onlinemanual.insta360.com/x3/camera/basicuse/parameter#:~:text=Swipe%20left%20from%20the%20right,white%20balance%2C%20and%20other%20parameters.)]
+> [[X4](https://onlinemanual.insta360.com/x4/faq/feature/shootingmode)]
 
 ### CaptureSetting
 
