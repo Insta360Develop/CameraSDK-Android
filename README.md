@@ -438,7 +438,7 @@ InstaCameraManager.getInstance().startHDRRecord();
 InstaCameraManager.getInstance().stopHDRRecord();
 ```
 
-### TimeLapse
+### Timelapse
 
 You can set interval time first (in ms)
 
@@ -1359,7 +1359,7 @@ mVideoPlayerView.prepare(workWrapper, new VideoParamsBuilder());
 mVideoPlayerView.play();
 ```
 
-Release `InstaVideoPlayerView` when activity is destory
+Release `InstaVideoPlayerView` when activity is destroyed
 
 ```Java
 @Override
