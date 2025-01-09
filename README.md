@@ -568,8 +568,9 @@ boolean isBeep = InstaCameraManager.getInstance().isCameraBeep();
 
 ## <a name="CameraSDK固件升级" />Firmware Upgrade
 
-> Obtain the firmware upgrade file from our person in charge and put it on your server or directly use the firmware link on our official website.
->
+> Obtain the firmware upgrade file on our official website and put it on your server
+> [[X4 firmware](https://www.insta360.com/download/insta360-x4)]
+
 > You can use the `Firmware Upgrade` interface after downloading the file to the local.
 
 > Note: Please do not upload the wrong file to the camera to avoid bricking. Example: Do not upload OneX firmware upgrade package to OneX2 camera.
