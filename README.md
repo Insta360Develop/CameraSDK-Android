@@ -18,6 +18,10 @@
 ## How to get?
 Please visit [https://www.insta360.com/sdk/apply](https://www.insta360.com/sdk/apply) to apply for the latest SDK.
 
+## Support
+Developers' Page: https://www.insta360.com/developer/home  
+Insta360 Enterprise: https://www.insta360.com/enterprise  
+Issue Report: https://insta.jinshuju.com/f/hZ4aMW  
 
 # Table of Contents
 - [Camera SDK Function](#CameraSDK功能)
