@@ -1,8 +1,8 @@
 <a href="https://github.com/Insta360Develop/CameraSDK-Android/releases">
-    <img src="https://img.shields.io/badge/version-1.5.3-green">
+    <img src="https://img.shields.io/badge/version-1.7.2-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
-    <img src="https://img.shields.io/badge/minSdkVersion-21-green">
+    <img src="https://img.shields.io/badge/minSdkVersion-24-green">
 </a> 
 <a href="https://developer.android.com/studio/publish/versioning#minsdkversion">
     <img src="https://img.shields.io/badge/targetSdkVersion-28-green">
@@ -57,6 +57,7 @@ allprojects {
         ...
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
+            isAllowInsecureProtocol = true
             credentials {
                 // see sdk demo
                 username = '***'
@@ -71,7 +72,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkcamera:1.5.3'
+    implementation 'com.arashivision.sdk:sdkcamera:1.7.1'
 }
 ```
 
@@ -524,6 +525,20 @@ InstaCameraManager.getInstance().setWhiteBalance(InstaCameraManager.FUNCTION_MOD
 int wb = InstaCameraManager.getInstance().getWhiteBalance(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL);
 ```
 
+Set/GetISO
+
+```
+InstaCameraManager.getInstance().setISO(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL, 1000);
+InstaCameraManager.getInstance().getISO(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL, true)
+```
+
+Set/GetShutterSpeed
+
+```
+InstaCameraManager.getInstance().setShutterSpeed(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL, 1.0 / 30);
+InstaCameraManager.getInstance().getShutterSpeed(InstaCameraManager.FUNCTION_MODE_CAPTURE_NORMAL)
+```
+
 > Please check the AAA parameters and range table of each camera.
 > [[ONE X](https://www.insta360.com/product/insta360-onex/)]
 > [[ONE R](https://onlinemanual.insta360.com/oner/camera/parameters)]
@@ -552,7 +567,25 @@ int wb = InstaCameraManager.getInstance().getWhiteBalance(InstaCameraManager.FUN
   ```java
   InstaCameraManager#getResolutionFromCamera(FunctionMode)
   ```
+- **Set/GetRawType**
 
+   Set/Get the raw type of the specified camera mode
+
+  > @params FunctionMode 
+  >
+  > ​	see InstaCameraManager.FUNCTION_MODE_XXX
+  >
+  > @params RawType 
+  >
+  >  	You can choose one of the rawtype supported by the camera to set arguments. Get the supported rawtype by CaptureSettingSupportConfig#getSupportRawTypeList
+
+  ```java
+   InstaCameraManager#setRawType(FunctionMode, RawType)
+  ```
+
+  ```java
+  InstaCameraManager#getRawType(FunctionMode)
+  ```
 
 ### Camera Beep
 
@@ -818,6 +851,7 @@ allprojects {
         ...
         maven {
             url 'http://nexus.arashivision.com:9999/repository/maven-public/'
+            isAllowInsecureProtocol = true
             credentials {
                 // see sdk demo
                 username = '***'
@@ -832,7 +866,7 @@ Second import the dependent library in your `build.gradle` file of app directory
 
 ```Groovy
 dependencies {
-    implementation 'com.arashivision.sdk:sdkmedia:1.5.3'
+    implementation 'com.arashivision.sdk:sdkmedia:1.7.1'
 }
 ```
 
@@ -905,15 +939,9 @@ public void onOpened() {
 }
 
 private CaptureParamsBuilder createParams() {
-    CaptureParamsBuilder builder = new CaptureParamsBuilder()
-            .setCameraType(InstaCameraManager.getInstance().getCameraType())
-			.setMediaOffset(InstaCameraManager.getInstance().getMediaOffset())
-			.setMediaOffsetV2(InstaCameraManager.getInstance().getMediaOffsetV2())
-			.setMediaOffsetV3(InstaCameraManager.getInstance().getMediaOffsetV3())
-			.setCameraSelfie(InstaCameraManager.getInstance().isCameraSelfie())
-			.setGyroTimeStamp(InstaCameraManager.getInstance().getGyroTimeStamp())
-			.setBatteryType(InstaCameraManager.getInstance().getBatteryType());
-    return builder;
+    return PreviewParamsUtil.getCaptureParamsBuilder()
+                .setLive(mCurPreviewType == InstaCameraManager.PREVIEW_TYPE_LIVE)
+                .setResolutionParams(mCurPreviewResolution.width, mCurPreviewResolution.height, mCurPreviewResolution.fps);
 }
 ```
 
