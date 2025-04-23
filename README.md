@@ -14,6 +14,8 @@ Issue Report: https://insta.jinshuju.com/f/hZ4aMW
 
 # [中文文档](README_zh.md)
 
+[TOC]
+
 # Overview
 
 The Android SDK is mainly used for connecting, setting and obtaining camera parameters, controlling the camera for taking photos and recording, downloading files, firmware upgrades, and supporting video and image exports.
