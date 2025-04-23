@@ -18,7 +18,7 @@ Issue Report: https://insta.jinshuju.com/f/hZ4aMW
 
 The Android SDK is mainly used for connecting, setting and obtaining camera parameters, controlling the camera for taking photos and recording, downloading files, firmware upgrades, and supporting video and image exports.
 
-Supported models: X5, X4, X3, ONE X2, ONE X, ONE RS, ONE RS one-inch.
+Supported models: X5, X4, X3, ONE X2, ONE X, ONE RS, ONE RS 1-Inch.
 
 # CameraSDK Function Instructions
 
